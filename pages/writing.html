@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Writing — Sree</title>
+<style>
+:root{--paper:#f3eee5;--ink:#171217;--pink:#f22b87;--acid:#c9dc65;--red:#d92f3d;--cream:#fffaf2;--line:#b8ada3}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,sans-serif;overflow-x:hidden}a{color:inherit;text-decoration:none}
+nav{position:fixed;z-index:30;top:18px;left:4%;right:4%;display:flex;justify-content:space-between;align-items:center;padding:11px 17px;border:1px solid #b9aea5;border-radius:999px;background:#f3eee5e8;backdrop-filter:blur(14px)}.logo{font-weight:900}.logo b{color:var(--pink)}.logo i{font-style:normal;margin-left:6px}.back{background:var(--ink);color:white;padding:9px 14px;border-radius:999px;font:10px monospace}.navlinks{font:10px monospace;letter-spacing:.1em}
+.k{font:10px monospace;letter-spacing:.15em;text-transform:uppercase}
+.hero{min-height:100vh;padding:125px 5vw 65px;display:grid;grid-template-columns:1.1fr .9fr;gap:5vw;align-items:center;position:relative}.hero h1{font-size:clamp(85px,14vw,210px);line-height:.67;letter-spacing:-.09em;margin:25px 0;text-transform:uppercase}.hero h1 em{font-family:Georgia,serif;font-weight:400;color:var(--pink);text-transform:none}.hero p{font:italic clamp(28px,3vw,46px)/1.05 Georgia,serif;max-width:700px}.sub{margin-top:24px;font:13px/1.6 monospace;color:#6d645f;max-width:650px}
+.manuscript{background:var(--cream);min-height:620px;padding:55px 45px;box-shadow:15px 15px var(--ink);transform:rotate(2deg);position:relative;background-image:linear-gradient(#ded6cd 1px,transparent 1px);background-size:100% 34px}.manuscript:before{content:"DRAFT 07";position:absolute;right:24px;top:20px;font:10px monospace;color:var(--red);transform:rotate(6deg)}.typed{font:32px/1.65 Georgia,serif}.typed del{color:#887d76}.circle{border:2px solid var(--red);border-radius:50%;padding:2px 8px}.margin-note{position:absolute;right:-35px;top:280px;color:var(--red);font:italic 22px Georgia,serif;transform:rotate(-8deg);max-width:180px}.editor{position:absolute;left:38px;bottom:35px;color:var(--red);font:italic 19px Georgia,serif;transform:rotate(-4deg)}
+.ribbon{padding:14px;background:var(--ink);color:white;text-align:center;font:10px monospace;letter-spacing:.14em}
+section{padding:105px 5vw}.head{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:50px}.head h2{font:clamp(62px,9vw,130px)/.75 Georgia,serif;margin:0}.head p{max-width:430px;line-height:1.6;color:#6d645f}
+.poison{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:45px}.pill{border:1px solid var(--ink);border-radius:999px;padding:12px 16px;font:10px monospace;text-transform:uppercase;cursor:pointer;background:transparent}.pill.active,.pill:hover{background:var(--ink);color:white}
+.bylines{display:grid;grid-template-columns:repeat(12,1fr);gap:18px}.article{border:1px solid var(--ink);padding:28px;min-height:330px;position:relative;transition:.2s}.article:hover{transform:translateY(-6px);box-shadow:8px 8px var(--ink)}.article:nth-child(1){grid-column:span 7;background:var(--cream)}.article:nth-child(2){grid-column:span 5;background:#f5b7cc;transform:rotate(1deg)}.article:nth-child(3){grid-column:span 4;background:var(--acid)}.article:nth-child(4){grid-column:span 8;background:var(--ink);color:white}.tag{font:10px monospace;text-transform:uppercase;letter-spacing:.12em}.article h3{font:clamp(36px,4vw,66px)/.95 Georgia,serif;margin:55px 0 20px}.article p{max-width:600px;line-height:1.55;opacity:.68}.read{position:absolute;bottom:24px;left:28px;font:10px monospace;text-transform:uppercase}.num{position:absolute;right:24px;top:24px;font:10px monospace}
+.margins{background:var(--cream);position:relative;overflow:hidden}.margins h2{font-size:clamp(68px,10vw,145px);line-height:.72;letter-spacing:-.08em;margin:20px 0 70px;text-transform:uppercase}.margins h2 em{font-family:Georgia,serif;color:var(--pink);font-weight:400;text-transform:none}.scribbles{display:grid;grid-template-columns:repeat(2,1fr);gap:40px 7vw}.scribble{border-top:1px solid var(--line);padding:28px 0;position:relative}.scribble .quote{font:clamp(28px,3.5vw,50px)/1.05 Georgia,serif}.scribble .reply{margin-top:17px;color:var(--red);font:italic 20px Georgia,serif;transform:rotate(-2deg);display:inline-block}.scribble del{color:#877c75}.redcircle{border:2px solid var(--red);border-radius:50%;padding:2px 7px}
+.how{background:var(--ink);color:white}.how h2{font:clamp(70px,10vw,150px)/.72 Georgia,serif;margin:20px 0 70px}.rules{border-top:1px solid #494041}.rule{display:grid;grid-template-columns:1fr 1fr;gap:40px;padding:28px 0;border-bottom:1px solid #494041;align-items:center}.wrong{font:clamp(25px,3vw,45px) Georgia,serif;color:#7f7470;text-decoration:line-through;text-decoration-color:var(--pink)}.right{font:clamp(30px,4vw,58px) Georgia,serif}.right span{color:var(--acid)}.rule small{display:block;font:11px/1.6 monospace;color:#a69b96;margin-top:8px}
+.end{min-height:85vh;padding:100px 5vw;display:flex;flex-direction:column;justify-content:center;position:relative}.end h2{font-size:clamp(75px,13vw,200px);line-height:.68;letter-spacing:-.09em;text-transform:uppercase;margin:0}.end h2 em{font-family:Georgia,serif;color:var(--pink);font-weight:400;text-transform:none}.end p{font:italic clamp(30px,4vw,60px) Georgia,serif;margin:35px 0}.cursor{display:inline-block;width:.55em;height:.08em;background:var(--ink);animation:blink 1s steps(1) infinite}@keyframes blink{50%{opacity:0}}footer{padding:22px 5vw;border-top:1px solid var(--line);display:flex;justify-content:space-between;font:9px monospace;text-transform:uppercase}
+@media(max-width:850px){.hero{grid-template-columns:1fr}.manuscript{margin-top:35px}.bylines{grid-template-columns:1fr}.article{grid-column:auto!important}.scribbles{grid-template-columns:1fr}.rule{grid-template-columns:1fr}.head{display:block}.head p{margin-top:20px}}
+@media(max-width:600px){nav .navlinks{display:none}.hero,section{padding-left:22px;padding-right:22px}.hero h1{font-size:78px}.manuscript{padding:45px 25px;min-height:540px}.typed{font-size:25px}.margin-note{right:8px;top:350px}.margins h2{font-size:65px}}
+</style>
+
+<style id="thought-cloud-style">
+.thought-cloud{position:relative;width:min(610px,92%);min-height:118px;margin:28px 0 8px;padding:24px 34px 25px;background:var(--cream);border:1px solid var(--ink);border-radius:52% 48% 50% 46%/58% 56% 44% 42%;box-shadow:8px 8px 0 rgba(23,18,23,.12);transform:rotate(-1.5deg)}
+.thought-cloud:before,.thought-cloud:after{content:"";position:absolute;background:var(--cream);border:1px solid var(--ink);border-radius:50%;z-index:-1}
+.thought-cloud:before{width:38px;height:38px;left:38px;bottom:-24px}
+.thought-cloud:after{width:17px;height:17px;left:20px;bottom:-43px}
+.cloud-label{display:block;margin-bottom:14px;font:9px monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--pink)}
+.thought{display:none;font:italic clamp(22px,2.4vw,34px)/1.08 Georgia,serif}
+.thought.active{display:block;animation:thoughtIn .55s ease both}
+@keyframes thoughtIn{from{opacity:0;transform:translateY(8px);filter:blur(4px)}to{opacity:1;transform:none;filter:blur(0)}}
+@media(max-width:600px){.thought-cloud{min-height:130px;padding:23px 28px;margin-top:24px}}
+</style>
+
+
+<style id="thought-cloud-v2">
+@media(min-width:851px){
+  .hero{grid-template-columns:minmax(0,1fr) 220px minmax(390px,.9fr);gap:2.2vw}
+  .thought-bridge{display:flex;align-items:center;justify-content:center;position:relative;z-index:4}
+}
+.thought-bridge{position:relative}
+.thought-cloud{
+  width:210px!important;min-height:155px!important;margin:0!important;padding:28px 22px!important;
+  display:flex;flex-direction:column;justify-content:center;
+  background:linear-gradient(145deg,#fffaf2 0%,#f5b7cc 100%)!important;
+  border:2px solid var(--ink)!important;
+  border-radius:58% 42% 55% 45%/48% 60% 40% 52%!important;
+  box-shadow:9px 9px 0 var(--ink),0 0 0 7px var(--paper)!important;
+  transform:rotate(-4deg)!important;
+  transition:background .5s ease,border-radius .55s ease,transform .5s ease,box-shadow .5s ease;
+}
+.thought-cloud:before{width:26px!important;height:26px!important;left:18px!important;bottom:-20px!important;z-index:1!important;background:inherit!important}
+.thought-cloud:after{width:11px!important;height:11px!important;left:3px!important;bottom:-35px!important;z-index:1!important;background:inherit!important}
+.cloud-label{font-size:8px!important;margin-bottom:10px!important}
+.thought{font-size:20px!important;line-height:1.02!important;position:relative;z-index:2}
+.thought-cloud.mood-0{background:linear-gradient(145deg,#fffaf2,#f5b7cc)!important;border-radius:58% 42% 55% 45%/48% 60% 40% 52%!important;transform:rotate(-4deg)!important}
+.thought-cloud.mood-1{background:linear-gradient(145deg,#d7e79b,#fffaf2)!important;border-radius:42% 58% 44% 56%/60% 43% 57% 40%!important;transform:rotate(3deg)!important}
+.thought-cloud.mood-2{background:linear-gradient(145deg,#171217,#49343f)!important;color:#fff!important;border-radius:50% 50% 62% 38%/42% 57% 43% 58%!important;transform:rotate(-2deg) scale(1.03)!important;box-shadow:9px 9px 0 var(--pink),0 0 0 7px var(--paper)!important}
+.thought-cloud.mood-2 .cloud-label{color:var(--acid)!important}
+.thought-cloud.mood-3{background:linear-gradient(145deg,#f22b87,#f8c6d9)!important;border-radius:63% 37% 48% 52%/54% 38% 62% 46%!important;transform:rotate(4deg) scale(.98)!important}
+@media(max-width:850px){
+ .thought-bridge{display:flex;justify-content:center;margin:25px 0 45px}
+ .thought-cloud{width:min(240px,75vw)!important}
+}
+</style>
+
+
+<style id="hero-thought-layout-fix">
+@media(min-width:851px){
+  .hero{
+    grid-template-columns:minmax(430px,1.08fr) 205px minmax(390px,.92fr)!important;
+    gap:1.4vw!important;
+  }
+  .hero > div:first-child{position:relative;z-index:3;min-width:0}
+  .hero h1{
+    letter-spacing:-.065em!important;
+    white-space:nowrap;
+    position:relative;
+    z-index:2;
+  }
+  .thought-bridge{
+    align-self:start!important;
+    margin-top:155px!important;
+    transform:translate(-20px,-38px);
+    z-index:6!important;
+  }
+  .thought-cloud{
+    width:215px!important;
+    min-height:145px!important;
+  }
+  .manuscript{position:relative;z-index:2}
+}
+@media(max-width:1100px) and (min-width:851px){
+  .hero{grid-template-columns:minmax(360px,1fr) 180px minmax(350px,.9fr)!important}
+  .hero h1{font-size:clamp(72px,10vw,130px)!important}
+  .thought-bridge{transform:translate(-12px,-32px)}
+  .thought-cloud{width:190px!important}
+}
+</style>
+
+<style id="content-protect-css">
+*{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+img,video{-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;-o-user-drag:none;user-drag:none}
+</style></head><body>
+<nav><div class="logo">SREE<b>.</b><i>✎</i></div><div class="navlinks">BYLINES &nbsp; / &nbsp; MARGINS &nbsp; / &nbsp; OPINIONS</div><a class="back" href="../index.html">← ALL WORLDS</a></nav>
+
+<header class="hero">
+<div><div class="k">Creative World 04 · Writing / Editorial / Copy</div>
+<h1>I HAVE<br><em>thoughts.</em></h1><p>Unfortunately, I also know how to write them down.</p><div class="sub">Some were commissioned. Some were researched. Some simply refused to leave me alone.</div></div>
+<div class="thought-bridge"><div class="thought-cloud" aria-label="Things currently occupying my brain">
+  <span class="cloud-label">currently in my head:</span>
+  <span class="thought active">Why does Malayalam cinema hit different?</span>
+  <span class="thought">What if the conspiracy theory is just good branding?</span>
+  <span class="thought">I should make a documentary about this.</span>
+  <span class="thought">Is this a story or am I overthinking again?</span>
+  <span class="thought">One more rabbit hole won't hurt.</span>
+  <span class="thought">Can ordinary things look like cinema?</span>
+  <span class="thought">Why do some stories stay with us?</span>
+  <span class="thought">Maybe the side quest is the main plot.</span>
+  <span class="thought">I have an idea. This is rarely convenient.</span>
+  <span class="thought">Films. Rabbit holes. Opinions. Repeat.</span>
+</div></div><div class="manuscript"><div class="typed">I write about <span class="circle">cinema</span>, culture, people and ideas.<br><br><del>Because content is king.</del><br><br>Because apparently keeping my opinions to myself was never really an option.</div><div class="margin-note">less “content”.<br>more point of view. ↗</div><div class="editor">good. now cut 37 words.</div></div>
+</header>
+
+<div class="ribbon">WORDS WITH A POINT ✦ OPINIONS WITH FOOTNOTES ✦ CINEMA ✦ CULTURE ✦ COPY ✦ OCCASIONAL OVERTHINKING ✦</div>
+
+<section>
+<div class="head"><div><div class="k">01 / The actual work</div><h2>Pick your<br>poison.</h2></div><p>Articles, essays, features, scripts and copy — filed less like a library and more like a pile of things I had something to say about.</p></div>
+<div class="poison"><button class="pill active">All</button><button class="pill">Cinema & Culture</button><button class="pill">Think Pieces</button><button class="pill">Stories & Features</button><button class="pill">Copy & Scripts</button></div>
+<div class="bylines">
+<article class="article"><span class="tag">Film / Analysis</span><span class="num">001</span><h3>Anime Collar & Malice</h3><p>A close reading of craft, tone and the choices under the surface.</p><a class="read" href="../assets/writing/anime-collar-malice-analysis-review.pdf" target="_blank" rel="noopener">Read the piece ↗</a></article><article class="article"><span class="tag">Analysis / Review</span><span class="num">002</span><h3>Record Without Words</h3><p>What the piece says without saying it — structure, silence and subtext.</p><a class="read" href="../assets/writing/record-without-words-analysis-review.pdf" target="_blank" rel="noopener">Read the piece ↗</a></article><article class="article"><span class="tag">Analysis / Review</span><span class="num">003</span><h3>The Eye Behind the Wall</h3><p>On watching, being watched, and the frame that implicates the viewer.</p><a class="read" href="../assets/writing/the-eye-behind-the-wall-analysis-review.pdf" target="_blank" rel="noopener">Read the piece ↗</a></article><article class="article"><span class="tag">Essay / Review</span><span class="num">004</span><h3>War on Terror</h3><p>A cultural-political reading — the story beneath the headline story.</p><a class="read" href="../assets/writing/war-on-terror-analysis-review.pdf" target="_blank" rel="noopener">Read the piece ↗</a></article>
+</section>
+
+<section class="margins">
+<div class="k">02 / Things written in the margins</div><h2>THE UNOFFICIAL<br><em>footnotes.</em></h2>
+<div class="scribbles">
+<div class="scribble"><div class="quote">“Can you make it more <span class="redcircle">engaging</span>?”</div><div class="reply">— the sentence that launched a thousand unnecessary exclamation marks.</div></div>
+<div class="scribble"><div class="quote">“Keep it short.”</div><div class="reply">The brief was fourteen pages.</div></div>
+<div class="scribble"><div class="quote">SEO said <del>keyword</del>.</div><div class="reply">My soul said synonym.</div></div>
+<div class="scribble"><div class="quote">Draft 1: confident.<br>Draft 7: existential.</div><div class="reply">Draft 8: somehow back to Draft 2.</div></div>
+</div>
+</section>
+
+<section class="how">
+<div class="k">03 / How I write</div><h2>THE EDIT<br>BEFORE THE EDIT.</h2>
+<div class="rules">
+<div class="rule"><div class="wrong">Big words</div><div class="right"><span>The right words.</span><small>I care more about clarity than sounding clever.</small></div></div>
+<div class="rule"><div class="wrong">Content</div><div class="right">A point of view.<small>If it could have been written by anyone, I probably haven't finished it yet.</small></div></div>
+<div class="rule"><div class="wrong">Engagement</div><div class="right">A reaction.<small>Laugh. Think. Argue. Save it. Send it. Something.</small></div></div>
+<div class="rule"><div class="wrong">Perfect first draft</div><div class="right"><span>LOL.</span><small>We don't do that here.</small></div></div>
+</div>
+</section>
+
+<section class="end"><div class="k">Final paragraph</div><h2>ANYWAY,<br>THAT'S MY<br><em>point.</em></h2><p>I probably have another one. <span class="cursor"></span></p><a class="back" href="../index.html">← BACK TO ALL MY WORLDS</a></section>
+<footer><span>© 2026 Sreelaxmi Nair</span><span>Writing · Editorial · Copy</span></footer>
+
+<script>
+(function(){
+  const cloud=document.querySelector('.thought-cloud');
+  const thoughts=[...document.querySelectorAll('.thought-cloud .thought')];
+  if(!cloud || !thoughts.length) return;
+  let i=0;
+  cloud.classList.add('mood-0');
+  setInterval(()=>{
+    thoughts[i].classList.remove('active');
+    cloud.classList.remove('mood-0','mood-1','mood-2','mood-3');
+    i=(i+1)%thoughts.length;
+    cloud.classList.add('mood-'+(i%4));
+    thoughts[i].classList.add('active');
+  },2200);
+})();
+</script>
+
+<script id="content-protect-js">
+(function(){
+  var stop=function(e){e.preventDefault();e.stopPropagation();return false;};
+  ['contextmenu','dragstart','selectstart','copy','cut'].forEach(function(evt){
+    document.addEventListener(evt,stop,{capture:true});
+  });
+  document.addEventListener('keydown',function(e){
+    var k=(e.key||'').toLowerCase();
+    if(e.ctrlKey||e.metaKey){
+      if(['s','u','c','x','a','p'].indexOf(k)>-1){return stop(e);}
+      if(e.shiftKey&&['i','j','c'].indexOf(k)>-1){return stop(e);}
+    }
+    if(k==='f12'){return stop(e);}
+  },{capture:true});
+  var lock=function(){document.querySelectorAll('img,video').forEach(function(m){m.setAttribute('draggable','false');});};
+  if(document.readyState!=='loading')lock();else document.addEventListener('DOMContentLoaded',lock);
+  // catch dynamically added media too
+  try{new MutationObserver(lock).observe(document.documentElement,{childList:true,subtree:true});}catch(e){}
+})();
+</script></body></html>

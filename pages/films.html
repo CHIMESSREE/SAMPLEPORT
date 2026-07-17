@@ -1,0 +1,64 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Films & Moving Image — Sree</title>
+<style>
+:root{--ink:#151112;--cream:#fff9f0;--pink:#f22b87;--acid:#c9dc65;--paper:#f2ece3;--line:#403738}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--ink);color:var(--cream);font-family:Arial,sans-serif}a{color:inherit;text-decoration:none}nav{position:fixed;z-index:20;top:18px;left:4%;right:4%;display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border:1px solid #5b5051;border-radius:999px;background:#151112dd}.logo{font-weight:900}.logo b{color:var(--pink)}.logo i{color:var(--acid);font-style:normal;margin-left:6px}.back{background:var(--cream);color:var(--ink);padding:9px 14px;border-radius:999px;font-size:11px}.hero{min-height:100vh;padding:130px 5vw 70px;display:grid;grid-template-columns:1fr 1.15fr;gap:5vw;align-items:center}.k{font:10px monospace;letter-spacing:.15em;text-transform:uppercase;color:#a99d98}.hero h1{font-size:clamp(75px,11vw,165px);line-height:.7;letter-spacing:-.08em;margin:25px 0;text-transform:uppercase}.hero h1 em{font-family:Georgia,serif;font-weight:400;color:var(--pink);text-transform:none}.hero p{font:28px/1.15 Georgia,serif;max-width:650px}.screen{aspect-ratio:16/10;background:linear-gradient(145deg,#2e2727,#090808);border:12px solid #2b2425;box-shadow:18px 18px #080707;display:grid;place-items:center;position:relative}.play{width:76px;height:76px;border:1px solid #fff;border-radius:50%;display:grid;place-items:center;font-size:22px}.screen small{position:absolute;bottom:15px;left:16px;font:9px monospace}.marquee{padding:14px;border-block:1px solid var(--line);font:10px monospace;letter-spacing:.14em;text-align:center}.showing{padding:105px 5vw;background:#1b1617}.head{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:50px}.head h2{font:clamp(65px,9vw,130px)/.75 Georgia,serif;margin:0}.head p{max-width:420px;color:#a99e98;line-height:1.6}.film{display:grid;grid-template-columns:1.3fr .7fr;gap:34px;padding:35px 0 65px;border-top:1px solid var(--line)}.film-screen{aspect-ratio:16/9;background:linear-gradient(135deg,#2b2424,#0d0b0c);display:grid;place-items:center;color:#716766;font:10px monospace;letter-spacing:.12em}.film-info{align-self:end}.type{font:10px monospace;color:var(--pink);text-transform:uppercase}.film h3{font:55px/1 Georgia,serif;margin:13px 0}.film p{font:20px/1.35 Georgia,serif;color:#d4cac4}.meta{border-top:1px solid var(--line);margin-top:25px;padding-top:18px;font-size:12px;line-height:1.8}.watch{display:inline-block;margin-top:22px;border:1px solid #716765;border-radius:999px;padding:11px 15px;font:10px monospace}.notes{padding:110px 5vw;background:var(--paper);color:var(--ink)}.notes h2{font-size:clamp(65px,9vw,130px);line-height:.75;letter-spacing:-.07em;margin:18px 0 65px}.notes h2 em{font-family:Georgia,serif;color:var(--pink);font-weight:400}.notegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:25px}.note{min-height:270px;padding:30px;box-shadow:10px 13px #17121715}.note:nth-child(1){background:#f5b7cc;transform:rotate(-3deg)}.note:nth-child(2){background:var(--acid);transform:rotate(2deg);margin-top:28px}.note:nth-child(3){background:var(--cream);transform:rotate(-1deg)}.note b{font:10px monospace;text-transform:uppercase}.note p{font:italic 36px/1.08 Georgia,serif;margin-top:30px}.end{min-height:75vh;padding:100px 5vw;display:flex;flex-direction:column;justify-content:center}.end h2{font-size:clamp(100px,20vw,300px);line-height:.65;letter-spacing:-.09em;margin:0}.end p{font:italic 50px Georgia,serif;color:var(--pink)}@media(max-width:850px){.hero,.film{grid-template-columns:1fr}.notegrid{grid-template-columns:1fr}.head{display:block}.head p{margin-top:20px}}
+</style>
+<style id="film-ending-v2">
+.notes{position:relative;overflow:hidden}
+.notes:after{content:"";position:absolute;right:-140px;top:-150px;width:430px;height:430px;border:1px solid rgba(21,17,18,.14);border-radius:50%}
+.credits-roll{border-top:1px solid rgba(21,17,18,.35);position:relative;z-index:2}
+.credit-line{display:grid;grid-template-columns:190px 1fr;gap:30px;padding:23px 0;border-bottom:1px solid rgba(21,17,18,.22);align-items:center}
+.credit-line span{font:10px monospace;letter-spacing:.14em;color:#766c67}
+.credit-line strong{font-size:clamp(22px,3vw,44px);letter-spacing:-.035em}
+.final-frame{margin:80px auto 0;max-width:760px;aspect-ratio:16/8;background:#151112;color:#fff9f0;padding:34px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;box-shadow:14px 14px #f22b87}
+.final-frame span,.final-frame small{font:10px monospace;letter-spacing:.14em;color:#c9dc65}
+.final-frame p{font:italic clamp(34px,5vw,68px)/1 Georgia,serif;margin:35px 0}
+@media(max-width:650px){.credit-line{grid-template-columns:1fr;gap:8px}.final-frame{aspect-ratio:auto;min-height:360px}}
+</style>
+
+<style id="content-protect-css">
+*{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+img,video{-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;-o-user-drag:none;user-drag:none}
+</style></head><body>
+<nav><div class="logo">SREE<b>.</b><i>▶</i></div><div>NOW SHOWING &nbsp;&nbsp; DIRECTOR'S NOTES</div><a class="back" href="../index.html">← ALL WORLDS</a></nav>
+<header class="hero"><div><div class="k">Creative World 03 · Films / Documentaries</div><h1>STORIES,<br>IN <em>motion.</em></h1><p><strong>Some stories need more than one frame.</strong> I stay with people, places and moments long enough to hear what they are trying to say.</p></div><div><div class="k">NOW SCREENING · SELECTED WORK</div><div class="screen"><div class="play">▶</div><small>TC 00:01:42:18</small></div></div></header>
+<div class="marquee">DOCUMENTARY ✦ PEOPLE ✦ PLACES ✦ OBSERVATION ✦ LISTENING ✦ STORIES THAT STAY ✦</div>
+<section class="showing"><div class="head"><div><div class="k">01 / Selected documentaries</div><h2>Now<br>showing.</h2></div><p>A small screening room for the stories I've followed. No endless archive — just the work I want you to sit with.</p></div>
+<article class="film"><div class="film-screen"><video src="../videos/jewellery-ad.mp4" controls playsinline preload="metadata" style="width:100%;height:100%;object-fit:cover"></video></div><div class="film-info"><span class="type">Commercial</span><h3>Jewellery Commercial</h3><p>A short-form product film — styled, shot and cut for the scroll.</p><div class="meta">MY ROLE — Direction · Edit<br>FORMAT — Commercial / Ad film</div><a class="watch" href="../videos/jewellery-ad.mp4" target="_blank" rel="noopener">WATCH FILM ▶</a></div></article>
+<article class="film"><div class="film-screen">ADD FILM / TRAILER 002</div><div class="film-info"><span class="type">Documentary · Year</span><h3>Documentary Title</h3><p>A second story, presented with enough room to feel important rather than becoming another thumbnail.</p><div class="meta">MY ROLE — Direction · Research · Camera<br>DURATION — 00:00</div><a class="watch">WATCH FILM ▶</a></div></article>
+<article class="film"><div class="film-screen">ADD FILM / TRAILER 003</div><div class="film-info"><span class="type">Documentary · Year</span><h3>Documentary Title</h3><p>A third film can live here when you're ready. If you only want two, this entire block can disappear.</p><div class="meta">MY ROLE — Your role here<br>DURATION — 00:00</div><a class="watch">WATCH FILM ▶</a></div></article></section>
+<section class="notes">
+<div class="k">02 / After the screening</div>
+<h2>END<br><em>credits.</em></h2>
+<div class="credits-roll">
+  <div class="credit-line"><span>DRAWN TO</span><strong>REAL PEOPLE</strong></div>
+  <div class="credit-line"><span>LOOKING FOR</span><strong>THE STORY BENEATH THE STORY</strong></div>
+  <div class="credit-line"><span>MY APPROACH</span><strong>OBSERVE · LISTEN · STAY A LITTLE LONGER</strong></div>
+  <div class="credit-line"><span>ALWAYS CHASING</span><strong>THE MOMENT THAT WASN'T SCRIPTED</strong></div>
+</div>
+<div class="final-frame">
+  <span>DIRECTOR'S NOTE · 001</span>
+  <p>“MOMENTS BEFORE PLOT.”<br><span style="font-size:.48em;line-height:1.25;display:block;margin-top:18px;color:#fff9f0;font-style:italic;font-weight:400">Because significance lives in every moment — and the plot is always waiting to twist.</span></p>
+  <small>— SREE</small>
+</div>
+</section>
+<section class="end"><div class="k">End frame</div><h2>THE END.</h2><p>for now.</p><a class="back" href="../index.html">← BACK TO ALL MY WORLDS</a></section>
+<script id="content-protect-js">
+(function(){
+  var stop=function(e){e.preventDefault();e.stopPropagation();return false;};
+  ['contextmenu','dragstart','selectstart','copy','cut'].forEach(function(evt){
+    document.addEventListener(evt,stop,{capture:true});
+  });
+  document.addEventListener('keydown',function(e){
+    var k=(e.key||'').toLowerCase();
+    if(e.ctrlKey||e.metaKey){
+      if(['s','u','c','x','a','p'].indexOf(k)>-1){return stop(e);}
+      if(e.shiftKey&&['i','j','c'].indexOf(k)>-1){return stop(e);}
+    }
+    if(k==='f12'){return stop(e);}
+  },{capture:true});
+  var lock=function(){document.querySelectorAll('img,video').forEach(function(m){m.setAttribute('draggable','false');});};
+  if(document.readyState!=='loading')lock();else document.addEventListener('DOMContentLoaded',lock);
+  // catch dynamically added media too
+  try{new MutationObserver(lock).observe(document.documentElement,{childList:true,subtree:true});}catch(e){}
+})();
+</script></body></html>
