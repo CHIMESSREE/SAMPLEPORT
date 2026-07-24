@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proposal Builder — Social Media Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;700;900&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Jost:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ui-void:#140A14; --ui-plum:#1F0F20; --ui-pink:#FF4D8D; --ui-acid:#C8FF4D;
+  --ui-linen:#F2E9EC; --ui-mute:rgba(242,233,236,.45); --ui-line:rgba(242,233,236,.12);
+}
+*{box-sizing:border-box; margin:0; padding:0}
+body{font-family:'DM Sans',sans-serif; background:var(--ui-void); color:var(--ui-linen)}
+.app{display:grid; grid-template-columns:340px 1fr; min-height:100vh}
+@media(max-width:1000px){ .app{grid-template-columns:1fr} }
+
+/* ══ PANEL ══ */
+.panel{
+  background:var(--ui-plum); border-right:1px solid var(--ui-line);
+  padding:20px 18px 60px; display:flex; flex-direction:column; gap:18px;
+  max-height:100vh; overflow-y:auto;
+}
+.brand{display:flex; align-items:baseline; gap:8px}
+.brand h1{font-family:'Syne',sans-serif; font-size:18px; font-weight:800; letter-spacing:-.3px}
+.brand span{font-family:'DM Mono',monospace; font-size:9px; letter-spacing:1.4px; text-transform:uppercase; color:var(--ui-mute)}
+.sec{display:flex; flex-direction:column; gap:9px}
+.sec-h{font-family:'DM Mono',monospace; font-size:9.5px; letter-spacing:2px; text-transform:uppercase; color:var(--ui-acid)}
+.hint{font-size:11px; line-height:1.5; color:var(--ui-mute)}
+.hint b{color:var(--ui-acid); font-weight:500}
+
+.tpls{display:flex; flex-direction:column; gap:7px}
+.tplbtn{
+  display:flex; gap:10px; align-items:center; text-align:left; cursor:pointer;
+  background:rgba(255,255,255,.04); border:1px solid var(--ui-line); border-radius:10px;
+  padding:9px; color:var(--ui-linen); transition:.18s;
+}
+.tplbtn:hover{border-color:rgba(255,77,141,.5)}
+.tplbtn.on{border-color:var(--ui-pink); background:rgba(255,77,141,.12)}
+.tplbtn .chip{width:34px; height:44px; border-radius:4px; flex:0 0 34px; overflow:hidden; display:flex; flex-direction:column}
+.tplbtn b{font-family:'Syne',sans-serif; font-size:12.5px; display:block}
+.tplbtn em{font-style:normal; font-size:10px; color:var(--ui-mute); line-height:1.35}
+
+.cgrid{display:grid; grid-template-columns:1fr 1fr; gap:7px}
+.cfield{display:flex; align-items:center; gap:7px; background:rgba(255,255,255,.04);
+  border:1px solid var(--ui-line); border-radius:8px; padding:6px 8px}
+.cfield input[type=color]{width:24px; height:22px; flex:0 0 24px; border:none; background:none; padding:0; cursor:pointer}
+.cfield span{font-size:10px; color:var(--ui-mute)}
+.pals{display:flex; gap:6px; flex-wrap:wrap}
+.pal{width:42px; height:22px; border-radius:5px; border:1px solid var(--ui-line); cursor:pointer; display:flex; overflow:hidden}
+.pal i{flex:1}
+select, input[type=text]{
+  background:rgba(255,255,255,.06); border:1px solid var(--ui-line); border-radius:7px;
+  color:var(--ui-linen); font-family:'DM Sans',sans-serif; font-size:12.5px; padding:8px 10px; width:100%; outline:none;
+}
+select option{background:var(--ui-plum)}
+
+.pagerow{
+  display:flex; align-items:center; gap:8px; background:rgba(255,255,255,.04);
+  border:1px solid var(--ui-line); border-radius:9px; padding:7px 9px;
+}
+.pagerow input[type=checkbox]{accent-color:var(--ui-pink); width:13px; height:13px}
+.pagerow .nm{font-size:11.5px; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.pagerow .thumb{
+  width:26px; height:26px; border-radius:5px; border:1px dashed rgba(242,233,236,.3);
+  background-size:cover; background-position:center; cursor:pointer; flex:0 0 26px;
+  display:flex; align-items:center; justify-content:center; font-size:11px; position:relative;
+}
+.pagerow .thumb input{display:none}
+.pagerow .jump{background:none; border:none; color:var(--ui-mute); cursor:pointer; font-size:12px}
+.pagerow .jump:hover{color:var(--ui-pink)}
+.tintrow{display:flex; align-items:center; gap:7px; font-size:10px; color:var(--ui-mute); padding:0 2px}
+.tintrow input[type=range]{flex:1; accent-color:var(--ui-pink)}
+
+.btn{border:none; border-radius:8px; padding:11px 14px; cursor:pointer;
+  font-family:'Syne',sans-serif; font-size:12.5px; font-weight:700; transition:.18s}
+.btn:hover{filter:brightness(1.08)}
+.btn-p{background:var(--ui-acid); color:var(--ui-void)}
+.btn-s{background:rgba(255,255,255,.08); color:var(--ui-linen); border:1px solid var(--ui-line)}
+.row{display:flex; gap:8px}
+.row>*{flex:1}
+
+/* ══ STAGE ══ */
+.stage{padding:26px 20px 70px; background:
+  radial-gradient(900px 500px at 50% -10%, rgba(255,77,141,.09), transparent 70%), var(--ui-void);
+  display:flex; flex-direction:column; align-items:center; gap:18px}
+.stagebar{display:flex; gap:10px; align-items:center; font-family:'DM Mono',monospace;
+  font-size:9.5px; letter-spacing:1.6px; text-transform:uppercase; color:var(--ui-mute)}
+#docwrap{transform-origin:top center}
+
+/* ══════════ DOCUMENT ══════════ */
+#doc{
+  --brand:#2B1B4D; --accent:#FF4D8D; --ink:#181018; --paper:#FFFFFF; --soft:#F3F0F5;
+  --fd:'Playfair Display',serif; --fb:'Jost',sans-serif; --fm:'DM Mono',monospace;
+  display:flex; flex-direction:column; align-items:center; gap:22px;
+}
+.page{
+  width:794px; height:1123px; background:var(--paper); color:var(--ink);
+  position:relative; overflow:hidden; flex-shrink:0;
+  box-shadow:0 24px 60px rgba(0,0,0,.5);
+  font-family:var(--fb);
+}
+.page.off{display:none}
+.page .bg{position:absolute; inset:0; background-size:cover; background-position:center; z-index:0}
+.page .tint{position:absolute; inset:0; z-index:1}
+.page .inner{position:absolute; inset:0; z-index:2; padding:64px 64px 56px; display:flex; flex-direction:column}
+.page.dark{color:#fff}
+
+/* type scale */
+.eyebrow{font-family:var(--fm); font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--accent)}
+h2.ttl{font-family:var(--fd); font-size:44px; line-height:1.03; font-weight:800; letter-spacing:-.5px; margin:10px 0 6px}
+.lede{font-size:15px; line-height:1.65; opacity:.82; max-width:56ch}
+p.body{font-size:13.5px; line-height:1.7; opacity:.82}
+.rule{height:1px; background:currentColor; opacity:.16; margin:22px 0}
+.pagenum{position:absolute; right:64px; bottom:34px; z-index:3; font-family:var(--fm); font-size:9.5px; letter-spacing:2px; opacity:.45}
+.brandmark{position:absolute; left:64px; bottom:32px; z-index:3; display:flex; align-items:center; gap:9px}
+.brandmark img{height:26px; width:auto; display:none}
+.brandmark img.on{display:block}
+.brandmark span{font-family:var(--fm); font-size:9.5px; letter-spacing:2.4px; text-transform:uppercase; opacity:.5}
+
+/* cover */
+.cover{background:var(--brand)}
+.cover .inner{justify-content:flex-end}
+.cover .kicker{font-family:var(--fm); font-size:11px; letter-spacing:4px; text-transform:uppercase; opacity:.7}
+.cover h1{font-family:var(--fd); font-size:64px; line-height:1; font-weight:800; letter-spacing:-1.5px; margin:16px 0 18px; max-width:16ch}
+.cover .meta{display:flex; gap:38px; margin-top:26px; padding-top:20px; border-top:1px solid rgba(255,255,255,.28)}
+.cover .meta div{display:flex; flex-direction:column; gap:4px}
+.cover .meta .k{font-family:var(--fm); font-size:9px; letter-spacing:2px; text-transform:uppercase; opacity:.55}
+.cover .meta .v{font-size:14px; font-weight:500}
+.cover .logo{position:absolute; top:56px; left:64px; z-index:3; height:38px; display:none}
+.cover .logo.on{display:block}
+
+/* stats */
+.stats{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:26px}
+.stat{padding:20px 18px; border-radius:12px; background:var(--soft)}
+.stat .n{font-family:var(--fd); font-size:36px; font-weight:800; color:var(--brand); line-height:1}
+.stat .l{font-size:11.5px; line-height:1.45; opacity:.7; margin-top:7px}
+
+/* lists */
+.rep{list-style:none; display:flex; flex-direction:column; gap:11px; margin-top:20px}
+.ritem{position:relative; display:flex; gap:13px; align-items:flex-start; padding-right:26px}
+.ritem .mark{flex:0 0 auto; margin-top:2px; width:20px; height:20px; border-radius:50%;
+  background:var(--accent); color:#fff; font-size:11px; display:flex; align-items:center; justify-content:center; font-weight:700}
+.ritem .txt{flex:1}
+.ritem .txt b{display:block; font-size:14px; font-weight:600; margin-bottom:3px}
+.ritem .txt span{font-size:12.5px; line-height:1.6; opacity:.75}
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px 26px; margin-top:20px}
+.grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:20px}
+.card{padding:20px 18px; border-radius:12px; border:1px solid rgba(0,0,0,.1); background:var(--paper)}
+.card .num{font-family:var(--fm); font-size:9.5px; letter-spacing:2px; color:var(--accent); text-transform:uppercase}
+.card h4{font-family:var(--fd); font-size:19px; font-weight:700; margin:8px 0 6px}
+.card p{font-size:12px; line-height:1.6; opacity:.75}
+
+/* deliverables tiles */
+.tiles{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:22px}
+.tile{position:relative; padding:18px 16px; border-radius:12px; background:var(--soft); text-align:left}
+.tile .q{font-family:var(--fd); font-size:30px; font-weight:800; color:var(--brand); line-height:1}
+.tile .d{font-size:11.5px; line-height:1.4; margin-top:6px; opacity:.75}
+
+/* packages */
+.tiers{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:22px; align-items:start}
+.tier{position:relative; border-radius:14px; padding:22px 18px 20px; border:1px solid rgba(0,0,0,.12); background:var(--paper)}
+.tier.feat{background:var(--brand); color:#fff; border-color:transparent}
+.tier .nm{font-family:var(--fm); font-size:10px; letter-spacing:2.4px; text-transform:uppercase; opacity:.7}
+.tier .pr{font-family:var(--fd); font-size:34px; font-weight:800; margin:9px 0 2px; line-height:1}
+.tier .pr small{font-family:var(--fb); font-size:12px; font-weight:400; opacity:.6}
+.tier ul{list-style:none; margin-top:14px; display:flex; flex-direction:column; gap:8px}
+.tier li{font-size:11.5px; line-height:1.45; padding-left:16px; position:relative; opacity:.85}
+.tier li:before{content:'→'; position:absolute; left:0; color:var(--accent); font-size:11px}
+.tier.feat li:before{color:#fff}
+
+/* timeline */
+.tl{margin-top:24px; display:flex; flex-direction:column; gap:0}
+.tlrow{display:flex; gap:18px; padding:16px 26px 16px 0; border-top:1px solid rgba(0,0,0,.12); position:relative}
+.tlrow:last-child{border-bottom:1px solid rgba(0,0,0,.12)}
+.tlrow .wk{font-family:var(--fm); font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--accent); flex:0 0 100px; padding-top:3px}
+.tlrow .ct b{display:block; font-size:14.5px; font-weight:600; margin-bottom:3px}
+.tlrow .ct span{font-size:12.5px; line-height:1.6; opacity:.75}
+
+/* closing */
+.cta{margin-top:auto; padding:26px; border-radius:14px; background:var(--brand); color:#fff}
+.cta h3{font-family:var(--fd); font-size:26px; font-weight:700; margin-bottom:8px}
+.cta p{font-size:13px; line-height:1.6; opacity:.85}
+.contactgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:18px}
+.contactgrid .k{font-family:var(--fm); font-size:9px; letter-spacing:2px; text-transform:uppercase; opacity:.5}
+.contactgrid .v{font-size:13px; margin-top:4px}
+
+/* ── editing affordances ── */
+[contenteditable]{outline:none}
+[contenteditable]:hover{box-shadow:inset 0 0 0 1px rgba(255,77,141,.35); border-radius:3px}
+[contenteditable]:focus{box-shadow:inset 0 0 0 1.5px var(--ui-pink); border-radius:3px}
+.del{
+  position:absolute; right:0; top:0; width:19px; height:19px; border-radius:50%;
+  background:rgba(0,0,0,.12); border:none; cursor:pointer; font-size:11px; line-height:1;
+  color:inherit; opacity:0; transition:.15s;
+}
+.ritem:hover .del,.tile:hover .del,.tier:hover .del,.tlrow:hover .del,.card:hover .del,.stat:hover .del{opacity:.75}
+.del:hover{background:var(--ui-pink); color:#fff; opacity:1 !important}
+.add{
+  margin-top:12px; align-self:flex-start; background:none; cursor:pointer;
+  border:1px dashed currentColor; border-radius:20px; padding:5px 13px;
+  font-family:var(--fm); font-size:9.5px; letter-spacing:1.6px; text-transform:uppercase;
+  color:inherit; opacity:.45;
+}
+.add:hover{opacity:.95; color:var(--accent)}
+
+/* ══════════ TEMPLATE A — EDITORIAL ══════════ */
+.t-editorial{--fd:'Playfair Display',serif; --fb:'Jost',sans-serif; --fm:'DM Mono',monospace}
+.t-editorial .card,.t-editorial .tier{border-radius:2px}
+.t-editorial .stat,.t-editorial .tile{border-radius:2px}
+.t-editorial .cta{border-radius:2px}
+.t-editorial h2.ttl{font-style:italic}
+.t-editorial .ritem .mark{border-radius:2px}
+
+/* ══════════ TEMPLATE B — BOLD BLOCKS ══════════ */
+.t-bold{--fd:'Syne',sans-serif; --fb:'DM Sans',sans-serif; --fm:'DM Mono',monospace}
+.t-bold h2.ttl{font-size:46px; font-weight:800; letter-spacing:-1.5px; text-transform:none}
+.t-bold .cover h1{font-weight:800; letter-spacing:-2.5px; text-transform:uppercase; font-size:60px}
+.t-bold .card,.t-bold .tier,.t-bold .stat,.t-bold .tile,.t-bold .cta{border-radius:20px}
+.t-bold .card{border:none; background:var(--soft)}
+.t-bold .tier{border:2px solid var(--brand)}
+.t-bold .eyebrow{background:var(--accent); color:#fff; padding:5px 12px; border-radius:20px; display:inline-block; align-self:flex-start}
+.t-bold .page:not(.cover) .inner:before{
+  content:''; position:absolute; right:-90px; top:-90px; width:260px; height:260px;
+  border-radius:50%; background:var(--accent); opacity:.1;
+}
+.t-bold .ritem .mark{border-radius:7px}
+
+/* ══════════ TEMPLATE C — QUIET STUDIO ══════════ */
+.t-studio{--fd:'Cormorant Garamond',serif; --fb:'Space Grotesk',sans-serif; --fm:'DM Mono',monospace}
+.t-studio .page .inner{padding:80px 76px 60px}
+.t-studio h2.ttl{font-size:50px; font-weight:500; letter-spacing:-.5px}
+.t-studio .cover h1{font-weight:500; font-size:70px; letter-spacing:-2px}
+.t-studio .card,.t-studio .tier{border-radius:0; border:none; border-top:1.5px solid var(--ink); background:none; padding-left:0; padding-right:0}
+.t-studio .tier.feat{background:none; color:inherit; border-top:1.5px solid var(--accent)}
+.t-studio .tier.feat li:before{color:var(--accent)}
+.t-studio .stat,.t-studio .tile{background:none; border-top:1.5px solid var(--ink); border-radius:0; padding-left:0}
+.t-studio .cta{background:none; color:inherit; border:1.5px solid var(--ink); border-radius:0}
+.t-studio .ritem .mark{background:none; color:var(--accent); border:1px solid currentColor; border-radius:0; font-size:9px}
+.t-studio .eyebrow{color:var(--ink); opacity:.5}
+
+/* ══════════ PRINT ══════════ */
+@page{ size:A4 portrait; margin:0 }
+@media print{
+  .panel,.stagebar,.noprint{display:none !important}
+  body{background:#fff}
+  .app{display:block}
+  .stage{padding:0; background:none}
+  #docwrap{transform:none !important}
+  #doc{gap:0}
+  .page{box-shadow:none; break-after:page; page-break-after:always; width:210mm; height:297mm}
+  .page:last-of-type{break-after:auto; page-break-after:auto}
+  [contenteditable]:hover,[contenteditable]:focus{box-shadow:none !important}
+  .del,.add{display:none !important}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ══ PANEL ══ -->
+<aside class="panel noprint">
+  <div class="brand"><h1>Proposal</h1><span>builder</span></div>
+
+  <div class="sec">
+    <div class="sec-h">1 — Template</div>
+    <div class="tpls" id="tpls"></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h">2 — Colours</div>
+    <div class="pals" id="pals"></div>
+    <div class="cgrid">
+      <label class="cfield"><input type="color" id="c_brand"><span>Brand</span></label>
+      <label class="cfield"><input type="color" id="c_accent"><span>Accent</span></label>
+      <label class="cfield"><input type="color" id="c_ink"><span>Body text</span></label>
+      <label class="cfield"><input type="color" id="c_paper"><span>Page</span></label>
+      <label class="cfield"><input type="color" id="c_soft"><span>Panels</span></label>
+      <label class="cfield" style="cursor:pointer" id="logoField">
+        <span style="color:var(--ui-linen)">⬆ Logo</span>
+        <input type="file" id="logoFile" accept="image/*" style="display:none">
+      </label>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h">3 — Pages &amp; backgrounds</div>
+    <div class="hint">Tick to include a page. Click the square to set a background photo, then dial the overlay so text stays readable.</div>
+    <div id="pagelist" style="display:flex; flex-direction:column; gap:7px"></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h">4 — Export</div>
+    <button class="btn btn-p" id="printBtn">Save as PDF</button>
+    <div class="row">
+      <button class="btn btn-s" id="saveBtn">Save file</button>
+      <button class="btn btn-s" id="openBtn">Open file</button>
+    </div>
+    <input type="file" id="openFile" accept=".json" style="display:none">
+    <label class="cfield" style="justify-content:space-between">
+      <span>Preview zoom</span>
+      <select id="zoom" style="width:auto; padding:4px 6px; font-size:11px">
+        <option value="0.5">50%</option><option value="0.65" selected>65%</option>
+        <option value="0.8">80%</option><option value="1">100%</option>
+      </select>
+    </label>
+    <div class="hint">Every word on the page is editable — click and type. <b>Save as PDF</b> opens your print dialog: choose <b>Save as PDF</b>, A4, margins <b>None</b>, and tick background graphics.</div>
+  </div>
+</aside>
+
+<!-- ══ STAGE ══ -->
+<main class="stage">
+  <div class="stagebar noprint"><span id="counter"></span></div>
+  <div id="docwrap">
+    <div id="doc" class="t-editorial">
+
+      <!-- 1 COVER -->
+      <section class="page cover dark" data-key="cover" data-name="Cover">
+        <div class="bg"></div><div class="tint"></div>
+        <img class="logo" alt="">
+        <div class="inner">
+          <div class="kicker" contenteditable>Social media proposal</div>
+          <h1 contenteditable>Social media management for Kairali School</h1>
+          <div class="lede" contenteditable>A twelve-month plan to turn the school's feed into the first thing a parent sees — and trusts.</div>
+          <div class="meta">
+            <div><span class="k">Prepared for</span><span class="v" contenteditable>Ms. Radhika Menon, Principal</span></div>
+            <div><span class="k">Prepared by</span><span class="v" contenteditable>Chimes Media Social</span></div>
+            <div><span class="k">Date</span><span class="v" contenteditable>July 2026</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2 HELLO -->
+      <section class="page" data-key="intro" data-name="Who we are">
+        <div class="bg"></div><div class="tint"></div>
+        <div class="inner">
+          <div class="eyebrow" contenteditable>Hello</div>
+          <h2 class="ttl" contenteditable>We make brands worth following</h2>
+          <p class="lede" contenteditable>We're a small social team that works like an in-house one. Strategy, shooting, editing, copy and community — handled by the same people, so nothing gets lost in a handover.</p>
+          <div class="rule"></div>
+          <p class="body" contenteditable>Most agencies sell you posts. We sell you a reason for someone to stop scrolling: a clear point of view, a look that's recognisably yours, and a publishing rhythm that doesn't collapse in month three. Everything below is built around that.</p>
+          <div class="stats">
+            <div class="stat"><button class="del" title="Remove">✕</button><div class="n" contenteditable>4.2M</div><div class="l" contenteditable>Organic views generated for client accounts last year</div></div>
+            <div class="stat"><button class="del" title="Remove">✕</button><div class="n" contenteditable>18</div><div class="l" contenteditable>Brands taken from scratch to a consistent feed</div></div>
+            <div class="stat"><button class="del" title="Remove">✕</button><div class="n" contenteditable>6.8%</div><div class="l" contenteditable>Average engagement rate across managed accounts</div></div>
+          </div>
+          <button class="add" data-clone=".stats .stat">+ Add stat</button>
+        </div>
+        <div class="brandmark"><img alt=""><span contenteditable>Chimes Media Social</span></div>
+        <div class="pagenum">02</div>
+      </section>
+
+      <!-- 3 WHERE YOU ARE -->
+      <section class="page" data-key="audit" data-name="Where you are now">
+        <div class="bg"></div><div class="tint"></div>
+        <div class="inner">
+          <div class="eyebrow" contenteditable>What we found</div>
+          <h2 class="ttl" contenteditable>Where the account stands today</h2>
+          <p class="lede" contenteditable>A quick read of the last ninety days, before we propose anything.</p>
+          <ul class="rep">
+            <li class="ritem"><button class="del">✕</button><span class="mark">1</span><div class="txt"><b contenteditable>Posting is reactive, not planned</b><span contenteditable>Activity spikes around events and goes quiet for weeks in between, so the account never builds momentum with the algorithm or with parents.</span></div></li>
+            <li class="ritem"><button class="del">✕</button><span class="mark">2</span><div class="txt"><b contenteditable>Strong material, flat presentation</b><span contenteditable>The photography from annual day and sports meet is genuinely good, but it's posted raw — no crop discipline, no captions doing any work.</span></div></li>
+            <li class="ritem"><button class="del">✕</button><span class="mark">3</span><div class="txt"><b contenteditable>Nothing speaks to prospective parents</b><span contenteditable>The feed documents events for people who already attend. There's very little that answers what an admission-season parent is actually asking.</span></div></li>
+            <li class="ritem"><button class="del">✕</button><span class="mark">4</span><div class="txt"><b contenteditable>Reels are untapped</b><span contenteditable>Reach on the three reels posted last term was roughly nine times that of static posts, and they haven't been repeated since.</span></div></li>
+          </ul>
+          <button class="add" data-clone=".rep .ritem">+ Add finding</button>
+        </div>
+        <div class="brandmark"><img alt=""><span contenteditable>Chimes Media Social</span></div>
+        <div class="pagenum">03</div>
+      </section>
+
+      <!-- 4 SERVICES -->
+      <section class="page" data-key="services" data-name="What we handle">
+        <div class="bg"></div><div class="tint"></div>
+        <div class="inner">
+          <div class="eyebrow" contenteditable>Scope</div>
+          <h2 class="ttl" contenteditable>What we handle</h2>
+          <p class="lede" contenteditable>Everything from the idea to the caption to the reply. You approve; we run it.</p>
+          <div class="grid3">
+            <div class="card"><button class="del">✕</button><div class="num" contenteditable>Strategy</div><h4 contenteditable>Content direction</h4><p contenteditable>Quarterly plan, content pillars, and a posting calendar you can see a month ahead.</p></div>
+            <div class="card"><button class="del">✕</button><div class="num" contenteditable>Production</div><h4 contenteditable>Shoot &amp; edit</h4><p contenteditable>One shoot day a month on campus, plus editing of everything your team captures.</p></div>
+            <div class="card"><button class="del">✕</button><div class="num" contenteditable>Design</div><h4 contenteditable>Graphics &amp; carousels</h4><p contenteditable>Templates built to your identity so every post is recognisable at thumbnail size.</p></div>
+            <div class="card"><button class="del">✕</button><div class="num" contenteditable>Copy</div><h4 contenteditable>Captions &amp; hooks</h4><p contenteditable>Written in your voice, structured to hold attention past the first line.</p></div>
+            <div class="card"><button class="del">✕</button><div class="num" contenteditable>Community</div><h4 contenteditable>Comments &amp; DMs</h4><p contenteditable>Replies within one working day, with admission queries routed to your front office.</p></div>
+            <div class="card"><button class="del">✕</button><div class="num" contenteditable>Reporting</div><h4 contenteditable>Monthly review</h4><p contenteditable>What worked, what didn't, and what changes next month — in plain language.</p></div>
+          </div>
+          <button class="add" data-clone=".grid3 .card">+ Add service</button>
+        </div>
+        <div class="brandmark"><img alt=""><span contenteditable>Chimes Media Social</span></div>
+        <div class="pagenum">04</div>
+      </section>
+
+      <!-- 5 APPROACH -->
+      <section class="page" data-key="approach" data-name="How we work">
+        <div class="bg"></div><div class="tint"></div>
+        <div class="inner">
+          <div class="eyebrow" contenteditable>Approach</div>
+          <h2 class="ttl" contenteditable>How a month runs</h2>
+          <p class="lede" contenteditable>Same rhythm every month, so you always know what's coming and when you need to look at something.</p>
+          <div class="tl">
+            <div class="tlrow"><button class="del">✕</button><div class="wk" contenteditable>Week 1</div><div class="ct"><b contenteditable>Plan &amp; approve</b><span contenteditable>You get next month's calendar with hooks and reference visuals. One round of changes, then it's locked.</span></div></div>
+            <div class="tlrow"><button class="del">✕</button><div class="wk" contenteditable>Week 2</div><div class="ct"><b contenteditable>Shoot day</b><span contenteditable>A half-day on campus covering classrooms, faculty, and whatever's happening that week. We work around the timetable, not against it.</span></div></div>
+            <div class="tlrow"><button class="del">✕</button><div class="wk" contenteditable>Week 3</div><div class="ct"><b contenteditable>Build &amp; schedule</b><span contenteditable>Edits, graphics and captions go into the queue. Nothing publishes without your sign-off on the batch.</span></div></div>
+            <div class="tlrow"><button class="del">✕</button><div class="wk" contenteditable>Week 4</div><div class="ct"><b contenteditable>Review &amp; adjust</b><span contenteditable>We read the numbers together on a thirty-minute call and change the plan where the evidence says to.</span></div></div>
+          </div>
+          <button class="add" data-clone=".tl .tlrow">+ Add phase</button>
+        </div>
+        <div class="brandmark"><img alt=""><span contenteditable>Chimes Media Social</span></div>
+        <div class="pagenum">05</div>
+      </section>
+
+      <!-- 6 DELIVERABLES -->
+      <section class="page" data-key="deliverables" data-name="Monthly deliverables">
+        <div class="bg"></div><div class="tint"></div>
+        <div class="inner">
+          <div class="eyebrow" contenteditable>Deliverables</div>
+          <h2 class="ttl" contenteditable>What lands every month</h2>
+          <p class="lede" contenteditable>Counts are a floor, not a ceiling. If a moment is worth covering, we cover it.</p>
+          <div class="tiles">
+            <div class="tile"><button class="del">✕</button><div class="q" contenteditable>12</div><div class="d" contenteditable>Feed posts — mixed carousels and stills</div></div>
+            <div class="tile"><button class="del">✕</button><div class="q" contenteditable>8</div><div class="d" contenteditable>Reels, shot and edited</div></div>
+            <div class="tile"><button class="del">✕</button><div class="q" contenteditable>30+</div><div class="d" contenteditable>Stories across the month</div></div>
+            <div class="tile"><button class="del">✕</button><div class="q" contenteditable>1</div><div class="d" contenteditable>Campus shoot day</div></div>
+            <div class="tile"><button class="del">✕</button><div class="q" contenteditable>1</div><div class="d" contenteditable>Performance report and review call</div></div>
+            <div class="tile"><button class="del">✕</button><div class="q" contenteditable>∞</div><div class="d" contenteditable>Community replies within one working day</div></div>
+          </div>
+          <button class="add" data-clone=".tiles .tile">+ Add deliverable</button>
+          <div class="rule"></div>
+          <p class="body" contenteditable>Admission season is different. In the six weeks before enrolment opens we shift the mix toward parent-facing content and add a paid support layer, quoted separately.</p>
+        </div>
+        <div class="brandmark"><img alt=""><span contenteditable>Chimes Media Social</span></div>
+        <div class="pagenum">06</div>
+      </section>
+
+      <!-- 7 PACKAGES -->
+      <section class="page" data-key="packages" data-name="Packages">
+        <div class="bg"></div><div class="tint"></div>
+        <div class="inner">
+          <div class="eyebrow" contenteditable>Investment</div>
+          <h2 class="ttl" contenteditable>Three ways to work together</h2>
+          <p class="lede" contenteditable>Monthly retainers, billed at the start of each month. Three-month minimum, because nothing meaningful shows up faster than that.</p>
+          <div class="tiers">
+            <div class="tier"><button class="del">✕</button><div class="nm" contenteditable>Essential</div><div class="pr" contenteditable>₹25,000<small contenteditable> /month</small></div>
+              <ul>
+                <li contenteditable>8 feed posts, 4 reels</li><li contenteditable>Stories twice a week</li>
+                <li contenteditable>Captions and hashtags</li><li contenteditable>Monthly report</li>
+                <li contenteditable>You supply raw footage</li>
+              </ul></div>
+            <div class="tier feat"><button class="del">✕</button><div class="nm" contenteditable>Full service · popular</div><div class="pr" contenteditable>₹45,000<small contenteditable> /month</small></div>
+              <ul>
+                <li contenteditable>12 feed posts, 8 reels</li><li contenteditable>Daily stories</li>
+                <li contenteditable>One campus shoot day</li><li contenteditable>Community management</li>
+                <li contenteditable>Monthly strategy call</li>
+              </ul></div>
+            <div class="tier"><button class="del">✕</button><div class="nm" contenteditable>Growth</div><div class="pr" contenteditable>₹70,000<small contenteditable> /month</small></div>
+              <ul>
+                <li contenteditable>Everything in Full service</li><li contenteditable>Two shoot days</li>
+                <li contenteditable>Paid campaign management</li><li contenteditable>Landing page and lead capture</li>
+                <li contenteditable>Fortnightly reporting</li>
+              </ul></div>
+          </div>
+          <button class="add" data-clone=".tiers .tier">+ Add package</button>
+        </div>
+        <div class="brandmark"><img alt=""><span contenteditable>Chimes Media Social</span></div>
+        <div class="pagenum">07</div>
+      </section>
+
+      <!-- 8 WORK -->
+      <section class="page" data-key="work" data-name="Selected work">
+        <div class="bg"></div><div class="tint"></div>
+        <div class="inner">
+          <div class="eyebrow" contenteditable>Proof</div>
+          <h2 class="ttl" contenteditable>Selected work</h2>
+          <p class="lede" contenteditable>Three accounts we took from quiet to consistent. Numbers are twelve-month figures.</p>
+          <div class="grid2">
+            <div class="card"><button class="del">✕</button><div class="num" contenteditable>Education</div><h4 contenteditable>Vidya Vihar School</h4><p contenteditable>Rebuilt the feed around teacher voices instead of event photos. Enquiries from Instagram rose from 4 to 61 a month over two terms.</p></div>
+            <div class="card"><button class="del">✕</button><div class="num" contenteditable>Hospitality</div><h4 contenteditable>Rann House</h4><p contenteditable>One shoot day a month and a reels-first calendar took the account from 1.2k to 34k followers, with direct bookings tracked in DMs.</p></div>
+            <div class="card"><button class="del">✕</button><div class="num" contenteditable>Retail</div><h4 contenteditable>Kutch Weaves</h4><p contenteditable>Artisan-led storytelling lifted average engagement from 1.1% to 7.4% and sold out two collections before launch day.</p></div>
+            <div class="card"><button class="del">✕</button><div class="num" contenteditable>Healthcare</div><h4 contenteditable>Dr. Anita Rao</h4><p contenteditable>A weekly explainer series built a waiting list. Booked-out calendar within five months, no paid spend.</p></div>
+          </div>
+          <button class="add" data-clone=".grid2 .card">+ Add case</button>
+        </div>
+        <div class="brandmark"><img alt=""><span contenteditable>Chimes Media Social</span></div>
+        <div class="pagenum">08</div>
+      </section>
+
+      <!-- 9 TERMS -->
+      <section class="page" data-key="terms" data-name="Terms">
+        <div class="bg"></div><div class="tint"></div>
+        <div class="inner">
+          <div class="eyebrow" contenteditable>The fine print</div>
+          <h2 class="ttl" contenteditable>How we keep it simple</h2>
+          <ul class="rep">
+            <li class="ritem"><button class="del">✕</button><span class="mark">✓</span><div class="txt"><b contenteditable>Billing</b><span contenteditable>Invoiced on the 1st, payable within seven days. Three-month minimum, then rolling with 30 days' notice either way.</span></div></li>
+            <li class="ritem"><button class="del">✕</button><span class="mark">✓</span><div class="txt"><b contenteditable>Approvals</b><span contenteditable>One named approver on your side. Batches approved within two working days, or we publish to the agreed calendar.</span></div></li>
+            <li class="ritem"><button class="del">✕</button><span class="mark">✓</span><div class="txt"><b contenteditable>Revisions</b><span contenteditable>Two rounds per batch are included. Reshoots caused by a change of brief are quoted separately.</span></div></li>
+            <li class="ritem"><button class="del">✕</button><span class="mark">✓</span><div class="txt"><b contenteditable>Ownership</b><span contenteditable>All footage, edits and source files are yours on final payment. We ask only to show the work in our portfolio.</span></div></li>
+            <li class="ritem"><button class="del">✕</button><span class="mark">✓</span><div class="txt"><b contenteditable>Ad spend</b><span contenteditable>Paid budget is billed directly by the platform to your account. We never mark it up.</span></div></li>
+          </ul>
+          <button class="add" data-clone=".rep .ritem">+ Add term</button>
+        </div>
+        <div class="brandmark"><img alt=""><span contenteditable>Chimes Media Social</span></div>
+        <div class="pagenum">09</div>
+      </section>
+
+      <!-- 10 CLOSE -->
+      <section class="page" data-key="close" data-name="Next steps">
+        <div class="bg"></div><div class="tint"></div>
+        <div class="inner">
+          <div class="eyebrow" contenteditable>Next steps</div>
+          <h2 class="ttl" contenteditable>If this reads right, here's what happens</h2>
+          <ul class="rep">
+            <li class="ritem"><button class="del">✕</button><span class="mark">1</span><div class="txt"><b contenteditable>Say yes to a package</b><span contenteditable>Reply with the tier you want. We send an agreement and the first invoice the same day.</span></div></li>
+            <li class="ritem"><button class="del">✕</button><span class="mark">2</span><div class="txt"><b contenteditable>Kick-off call</b><span contenteditable>Ninety minutes with you and anyone who owns the message. We leave with the first month's calendar drafted.</span></div></li>
+            <li class="ritem"><button class="del">✕</button><span class="mark">3</span><div class="txt"><b contenteditable>First post goes live</b><span contenteditable>Within fourteen days of signing.</span></div></li>
+          </ul>
+          <button class="add" data-clone=".rep .ritem">+ Add step</button>
+          <div class="cta">
+            <h3 contenteditable>Ready when you are</h3>
+            <p contenteditable>This proposal holds for 30 days. Any questions before then, call — it's faster than email.</p>
+            <div class="contactgrid">
+              <div><div class="k">Email</div><div class="v" contenteditable>hello@chimesmedia.in</div></div>
+              <div><div class="k">Phone</div><div class="v" contenteditable>+91 98000 00000</div></div>
+              <div><div class="k">Instagram</div><div class="v" contenteditable>@chimesmedia.social</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="pagenum">10</div>
+      </section>
+
+    </div>
+  </div>
+</main>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const doc = $('doc');
+
+/* ── templates ── */
+const TPL = {
+  't-editorial':{ name:'Editorial', blurb:'Serif headlines, hairline rules, magazine restraint.', chip:['#2B1B4D','#FF4D8D','#FFFFFF'] },
+  't-bold':{ name:'Bold blocks', blurb:'Rounded panels, pill labels, heavy sans. Reads confident.', chip:['#1B3BD4','#FFD84D','#F3F0F5'] },
+  't-studio':{ name:'Quiet studio', blurb:'Rules instead of boxes, wide margins, understated luxury.', chip:['#2E2A26','#B4713C','#FBF7F0'] }
+};
+$('tpls').innerHTML = Object.entries(TPL).map(([k,t])=>`
+  <button class="tplbtn" data-t="${k}">
+    <span class="chip">${t.chip.map(c=>`<i style="flex:1;background:${c}"></i>`).join('')}</span>
+    <span><b>${t.name}</b><em>${t.blurb}</em></span>
+  </button>`).join('');
+$('tpls').onclick = e => {
+  const b = e.target.closest('.tplbtn'); if(!b) return;
+  doc.className = b.dataset.t;
+  document.querySelectorAll('.tplbtn').forEach(x=>x.classList.toggle('on', x===b));
+};
+
+/* ── colours ── */
+const PALS = [
+  { brand:'#2B1B4D', accent:'#FF4D8D', ink:'#181018', paper:'#FFFFFF', soft:'#F3F0F5' },
+  { brand:'#1B3BD4', accent:'#FFB800', ink:'#111827', paper:'#FFFFFF', soft:'#EEF2FF' },
+  { brand:'#2E2A26', accent:'#B4713C', ink:'#2A2622', paper:'#FBF7F0', soft:'#F0E9DE' },
+  { brand:'#0E3B3E', accent:'#3BE0A0', ink:'#122224', paper:'#FFFFFF', soft:'#E8F4F1' },
+  { brand:'#7A1040', accent:'#FF4D6D', ink:'#25101A', paper:'#FFF7FA', soft:'#F7E6EC' },
+  { brand:'#101418', accent:'#E8503A', ink:'#14181C', paper:'#FFFFFF', soft:'#EDEFF2' }
+];
+const KEYS = ['brand','accent','ink','paper','soft'];
+function setTheme(t){
+  KEYS.forEach(k => { doc.style.setProperty('--'+k, t[k]); $('c_'+k).value = t[k]; });
+}
+$('pals').innerHTML = PALS.map((p,i)=>`<div class="pal" data-i="${i}"><i style="background:${p.brand}"></i><i style="background:${p.accent}"></i><i style="background:${p.soft}"></i></div>`).join('');
+$('pals').onclick = e => { const d = e.target.closest('.pal'); if(d) setTheme(PALS[+d.dataset.i]); };
+KEYS.forEach(k => $('c_'+k).oninput = e => doc.style.setProperty('--'+k, e.target.value));
+
+/* ── logo ── */
+$('logoField').onclick = () => $('logoFile').click();
+$('logoFile').onchange = e => {
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = ev => document.querySelectorAll('.cover .logo, .brandmark img').forEach(img => {
+    img.src = ev.target.result; img.classList.add('on');
+  });
+  r.readAsDataURL(f);
+};
+
+/* ── pages: include toggle, background image, overlay ── */
+const P = () => [...document.querySelectorAll('.page')];
+function tintFor(page, amt){
+  const dark = page.classList.contains('dark');
+  const c = dark ? '0,0,0' : '255,255,255';
+  return `linear-gradient(rgba(${c},${amt}), rgba(${c},${amt}))`;
+}
+function buildPageList(){
+  $('pagelist').innerHTML = P().map((p,i)=>`
+    <div>
+      <div class="pagerow">
+        <input type="checkbox" data-i="${i}" data-act="show" ${p.classList.contains('off')?'':'checked'}>
+        <span class="nm">${i+1}. ${p.dataset.name}</span>
+        <button class="jump" data-i="${i}" data-act="jump" title="Scroll to page">⤓</button>
+        <button class="jump" data-i="${i}" data-act="dupe" title="Duplicate this page">⧉</button>
+        <label class="thumb" style="background-image:${p.dataset.bg ? `url('${p.dataset.bg}')` : 'none'}">
+          ${p.dataset.bg ? '' : '＋'}
+          <input type="file" accept="image/*" data-i="${i}" data-act="bg">
+        </label>
+      </div>
+      ${p.dataset.bg ? `<div class="tintrow">
+        <span>Overlay</span>
+        <input type="range" min="0" max="95" value="${p.dataset.tint||70}" data-i="${i}" data-act="tint">
+        <span data-lab="${i}">${p.dataset.tint||70}%</span>
+        <button class="jump" data-i="${i}" data-act="clear" title="Remove background">✕</button>
+      </div>` : ''}
+    </div>`).join('');
+  let n = 0;
+  P().forEach(p => {
+    if(p.classList.contains('off')) return;
+    n++;
+    const tag = p.querySelector('.pagenum');
+    if(tag) tag.textContent = String(n).padStart(2,'0');
+  });
+  $('counter').textContent = `${n} pages · A4 portrait`;
+}
+$('pagelist').addEventListener('input', e => {
+  const el = e.target, i = +el.dataset.i, p = P()[i], act = el.dataset.act;
+  if(act === 'show'){ p.classList.toggle('off', !el.checked); buildPageList(); }
+  if(act === 'tint'){
+    p.dataset.tint = el.value;
+    p.querySelector('.tint').style.background = tintFor(p, el.value/100);
+    const lab = document.querySelector(`[data-lab="${i}"]`); if(lab) lab.textContent = el.value+'%';
+  }
+  if(act === 'bg'){
+    const f = el.files[0]; if(!f) return;
+    const r = new FileReader();
+    r.onload = ev => {
+      p.dataset.bg = ev.target.result;
+      p.dataset.tint = p.dataset.tint || 70;
+      p.querySelector('.bg').style.backgroundImage = `url('${ev.target.result}')`;
+      p.querySelector('.tint').style.background = tintFor(p, p.dataset.tint/100);
+      buildPageList();
+    };
+    r.readAsDataURL(f);
+  }
+});
+$('pagelist').addEventListener('click', e => {
+  const b = e.target.closest('[data-act="jump"], [data-act="clear"], [data-act="dupe"]'); if(!b) return;
+  const i = +b.dataset.i, p = P()[i];
+  if(b.dataset.act === 'jump'){ p.scrollIntoView({behavior:'smooth', block:'start'}); return; }
+  if(b.dataset.act === 'dupe'){
+    const copy = p.cloneNode(true);
+    copy.dataset.key = p.dataset.key + '-' + Math.random().toString(36).slice(2,7);
+    copy.dataset.name = p.dataset.name + ' (copy)';
+    p.after(copy); buildPageList(); return;
+  }
+  delete p.dataset.bg; delete p.dataset.tint;
+  p.querySelector('.bg').style.backgroundImage = '';
+  p.querySelector('.tint').style.background = '';
+  buildPageList();
+});
+
+/* ── repeatable rows ── */
+doc.addEventListener('click', e => {
+  const del = e.target.closest('.del');
+  if(del){
+    const item = del.parentElement, list = item.parentElement;
+    if(list.children.length > 1) item.remove();
+    return;
+  }
+  const add = e.target.closest('.add');
+  if(add){
+    const sel = add.dataset.clone.split(' ').pop();
+    const list = add.closest('.inner').querySelector(add.dataset.clone.split(' ')[0]);
+    const last = list.querySelector(sel + ':last-child') || list.lastElementChild;
+    const copy = last.cloneNode(true);
+    copy.classList.remove('feat');
+    list.appendChild(copy);
+    const first = copy.querySelector('[contenteditable]');
+    if(first){ first.focus(); document.getSelection().selectAllChildren(first); }
+  }
+});
+/* keep pasted text plain so the document stays consistent */
+doc.addEventListener('paste', e => {
+  if(!e.target.closest('[contenteditable]')) return;
+  e.preventDefault();
+  document.execCommand('insertText', false, (e.clipboardData || window.clipboardData).getData('text'));
+});
+
+/* ── zoom ── */
+$('zoom').onchange = e => { $('docwrap').style.transform = `scale(${e.target.value})`; fitStage(); };
+function fitStage(){
+  const z = +$('zoom').value;
+  $('docwrap').style.marginBottom = `${-(1-z) * $('docwrap').scrollHeight}px`;
+}
+
+/* ── save / open ── */
+$('printBtn').onclick = () => window.print();
+$('saveBtn').onclick = () => {
+  const data = {
+    tpl: doc.className,
+    theme: Object.fromEntries(KEYS.map(k => [k, doc.style.getPropertyValue('--'+k)])),
+    logo: document.querySelector('.cover .logo').src || '',
+    pages: P().map(p => ({
+      key:p.dataset.key, off:p.classList.contains('off'),
+      bg:p.dataset.bg||'', tint:p.dataset.tint||'', html:p.querySelector('.inner').innerHTML
+    }))
+  };
+  const blob = new Blob([JSON.stringify(data)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'proposal.json'; a.click();
+};
+$('openBtn').onclick = () => $('openFile').click();
+$('openFile').onchange = e => {
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    try{
+      const d = JSON.parse(ev.target.result);
+      doc.className = d.tpl || 't-editorial';
+      document.querySelectorAll('.tplbtn').forEach(x=>x.classList.toggle('on', x.dataset.t === doc.className));
+      if(d.theme) setTheme(d.theme);
+      if(d.logo) document.querySelectorAll('.cover .logo, .brandmark img').forEach(img=>{ img.src = d.logo; img.classList.add('on'); });
+      (d.pages||[]).forEach(pd => {
+        const p = P().find(x => x.dataset.key === pd.key); if(!p) return;
+        p.querySelector('.inner').innerHTML = pd.html;
+        p.classList.toggle('off', !!pd.off);
+        if(pd.bg){ p.dataset.bg = pd.bg; p.dataset.tint = pd.tint || 70;
+          p.querySelector('.bg').style.backgroundImage = `url('${pd.bg}')`;
+          p.querySelector('.tint').style.background = tintFor(p, (pd.tint||70)/100);
+        }
+      });
+      buildPageList();
+    }catch(err){ alert("That file couldn't be read as a saved proposal."); }
+  };
+  r.readAsText(f);
+};
+
+/* ── init ── */
+document.querySelector('.tplbtn').classList.add('on');
+setTheme(PALS[0]);
+buildPageList();
+$('docwrap').style.transform = 'scale(0.65)';
+fitStage();
+window.addEventListener('resize', fitStage);
+</script>
+</body>
+</html>

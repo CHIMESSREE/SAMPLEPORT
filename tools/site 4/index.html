@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dr. Meera Iyer — Clinical Psychologist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Karla:wght@300;400;500;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --butter:#FBF1DE;      /* warm butter background */
+  --peach:#F7C59F;
+  --coral:#EE7B5C;
+  --sage:#8FAE8B;
+  --sky:#9CC0D8;
+  --plum:#4A3B52;        /* soft ink, warmer than clinical navy */
+  --cream:#FFFBF2;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--butter);color:var(--plum);
+  font-family:'Karla',sans-serif;font-weight:400;line-height:1.8;
+  background-image:radial-gradient(rgba(74,59,82,.05) 1px, transparent 1px);
+  background-size:26px 26px;
+}
+a{color:inherit;text-decoration:none}
+a:focus-visible,button:focus-visible{outline:3px solid var(--coral);outline-offset:3px;border-radius:6px}
+h1,h2,h3{font-family:'Newsreader',serif;font-weight:500}
+.hand{font-family:'Caveat',cursive;font-weight:600;color:var(--coral)}
+.tag{font-size:.74rem;letter-spacing:.24em;text-transform:uppercase;color:var(--sage);font-weight:700}
+
+.doodle{position:absolute;pointer-events:none}
+.squiggle-under{display:block;margin-top:.2rem}
+
+nav{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.7rem clamp(1.4rem,6vw,5rem);position:relative;
+}
+.wordmark{font-family:'Newsreader',serif;font-size:1.3rem}
+.wordmark span{color:var(--coral);font-style:italic}
+nav ul{display:flex;gap:2.2rem;list-style:none}
+nav ul a{font-size:.88rem;font-weight:500;color:#6E5F76;transition:color .3s}
+nav ul a:hover{color:var(--coral)}
+
+header{
+  display:grid;grid-template-columns:1.15fr .85fr;gap:3rem;align-items:center;
+  padding:3.5rem clamp(1.4rem,6vw,5rem) 5rem;max-width:1200px;margin:0 auto;position:relative;
+}
+header h1{font-size:clamp(2.3rem,5vw,3.7rem);line-height:1.2;margin:1.1rem 0 1.4rem}
+header h1 em{font-style:italic;color:var(--coral);position:relative;display:inline-block}
+header p.lede{max-width:48ch;color:#6E5F76;font-size:1.05rem;margin-bottom:2.2rem}
+.btn{
+  display:inline-block;padding:.95rem 2.4rem;border-radius:999px;
+  background:var(--coral);color:var(--cream);font-size:.92rem;font-weight:700;letter-spacing:.03em;
+  box-shadow:0 6px 0 #C85A3E;transition:transform .15s, box-shadow .15s;
+}
+.btn:hover{transform:translateY(3px);box-shadow:0 3px 0 #C85A3E}
+.btn.ghost{background:var(--cream);color:var(--plum);box-shadow:0 6px 0 rgba(74,59,82,.25);margin-left:.8rem;border:2px solid var(--plum)}
+.btn.ghost:hover{box-shadow:0 3px 0 rgba(74,59,82,.25)}
+
+/* breathing circle, now sitting on a sun doodle */
+.breath-wrap{display:flex;flex-direction:column;align-items:center;gap:1.2rem;position:relative}
+.breath{
+  width:min(270px,58vw);aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle at 38% 32%, var(--cream), #F6E3C8 62%, var(--peach));
+  box-shadow:0 20px 50px rgba(238,123,92,.25), inset 0 0 0 3px rgba(238,123,92,.35);
+  display:flex;align-items:center;justify-content:center;
+  animation:breathe 8s ease-in-out infinite;position:relative;z-index:1;
+}
+.breath p{font-family:'Newsreader',serif;font-style:italic;color:#8A6A55;font-size:1rem;margin:0}
+@keyframes breathe{0%,100%{transform:scale(.92)}50%{transform:scale(1.05)}}
+.breath-cap{font-size:1.3rem}
+.sun-rays{position:absolute;top:-26px;right:-16px;z-index:0}
+@media (prefers-reduced-motion:reduce){.breath{animation:none}.reveal{opacity:1!important;transform:none!important}}
+
+section{padding:4.5rem clamp(1.4rem,6vw,5rem);max-width:1200px;margin:0 auto;position:relative}
+.tag + h2{font-size:clamp(1.8rem,3.6vw,2.5rem);margin:.7rem 0 1rem;line-height:1.3}
+.lede{max-width:56ch;color:#6E5F76}
+
+/* wavy divider between sections */
+.wave{display:block;width:100%;height:34px}
+
+/* areas of care — each card a different colour */
+.areas{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.4rem;margin-top:2.6rem}
+.area{
+  border-radius:22px;padding:2.1rem 1.8rem;position:relative;
+  border:2px solid var(--plum);
+  transition:transform .2s;
+}
+.area:nth-child(1){background:#FCE3D3}
+.area:nth-child(2){background:#E4EDE0}
+.area:nth-child(3){background:#E2ECF3}
+.area:nth-child(4){background:#F6E8D2}
+.area:hover{transform:translateY(-5px) rotate(-.5deg)}
+.area:nth-child(even):hover{transform:translateY(-5px) rotate(.5deg)}
+.area h3{font-size:1.25rem;margin:.9rem 0 .6rem}
+.area p{font-size:.93rem;color:#5D5064}
+.area svg{display:block}
+
+/* approach band */
+.approach{
+  background:var(--sage);color:var(--cream);border-radius:32px;
+  padding:3.5rem clamp(1.8rem,5vw,4rem);margin:2rem clamp(1.4rem,6vw,5rem);
+  max-width:1200px;position:relative;border:2px solid var(--plum);
+  box-shadow:8px 8px 0 rgba(74,59,82,.2);
+}
+@media(min-width:1201px){.approach{margin-left:auto;margin-right:auto}}
+.approach .tag{color:#FBEFD8}
+.approach h2{color:var(--cream);font-size:clamp(1.7rem,3.2vw,2.3rem);margin:.7rem 0 1.8rem}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2rem}
+.steps h3{font-size:1.15rem;color:#FBEFD8;margin-bottom:.5rem;font-style:italic}
+.steps p{font-size:.93rem;color:#EAF2E7}
+.approach .hand{color:#FBEFD8;font-size:1.4rem}
+
+/* practical info */
+.info{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.4rem;margin-top:2.4rem}
+.info > div{background:var(--cream);border-radius:20px;padding:1.8rem 1.7rem;border:2px solid var(--plum);box-shadow:5px 5px 0 var(--peach)}
+.info > div:nth-child(2){box-shadow:5px 5px 0 var(--sage)}
+.info > div:nth-child(3){box-shadow:5px 5px 0 var(--sky)}
+.info > div:nth-child(4){box-shadow:5px 5px 0 var(--coral)}
+.info h3{font-size:1.1rem;margin-bottom:.4rem}
+.info p{font-size:.9rem;color:#6E5F76}
+
+.book-box{
+  text-align:center;background:var(--cream);border:2px solid var(--plum);border-radius:32px;
+  padding:3.5rem clamp(1.5rem,4vw,3rem);position:relative;box-shadow:8px 8px 0 var(--peach);
+}
+footer{padding:3.5rem clamp(1.4rem,6vw,5rem);text-align:center;color:#6E5F76;font-size:.88rem}
+footer .serif{font-family:'Newsreader',serif;font-size:1.15rem;color:var(--plum);display:block;margin-bottom:.6rem}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+@media(max-width:820px){
+  header{grid-template-columns:1fr;text-align:center}
+  header p.lede{margin-left:auto;margin-right:auto}
+  .breath-wrap{order:-1}
+  nav ul{display:none}
+  .doodle.hide-m{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="wordmark" href="#">Dr. Meera Iyer <span>· Psychologist</span></a>
+  <ul>
+    <li><a href="#care">Areas of care</a></li>
+    <li><a href="#approach">Approach</a></li>
+    <li><a href="#sessions">Sessions</a></li>
+    <li><a href="#book">Book</a></li>
+  </ul>
+</nav>
+
+<header>
+  <!-- floating doodles -->
+  <svg class="doodle hide-m" style="top:18px;left:2%" width="54" height="54" viewBox="0 0 54 54" aria-hidden="true">
+    <path d="M27 6 L31 21 L46 21 L34 30 L38 45 L27 36 L16 45 L20 30 L8 21 L23 21 Z" fill="none" stroke="#EE7B5C" stroke-width="2.5" stroke-linejoin="round"/>
+  </svg>
+  <svg class="doodle hide-m" style="bottom:60px;left:44%" width="90" height="26" viewBox="0 0 90 26" aria-hidden="true">
+    <path d="M4 14 Q14 2 24 14 T44 14 T64 14 T84 14" fill="none" stroke="#9CC0D8" stroke-width="3" stroke-linecap="round"/>
+  </svg>
+  <div>
+    <p class="tag">Clinical Psychologist · RCI Registered</p>
+    <h1>Therapy that moves at <em>your<svg class="squiggle-under" width="100%" height="10" viewBox="0 0 120 10" preserveAspectRatio="none" aria-hidden="true"><path d="M2 6 Q16 1 30 6 T58 6 T86 6 T114 6" fill="none" stroke="#F7C59F" stroke-width="4" stroke-linecap="round"/></svg></em> pace</h1>
+    <p class="lede">I'm Dr. Meera Iyer, a clinical psychologist with twelve years of practice. My work is warm, evidence-based, and free of jargon — a steady place to understand what you're carrying and what you'd like to change.</p>
+    <div>
+      <a class="btn" href="#book">Book a first session</a>
+      <a class="btn ghost" href="#approach">How I work</a>
+    </div>
+  </div>
+  <div class="breath-wrap" aria-hidden="true">
+    <svg class="sun-rays" width="100" height="100" viewBox="0 0 100 100">
+      <g stroke="#F2A94B" stroke-width="3" stroke-linecap="round">
+        <path d="M50 4 L50 20 M50 80 L50 96 M4 50 L20 50 M80 50 L96 50 M18 18 L29 29 M71 71 L82 82 M82 18 L71 29 M29 71 L18 82"/>
+      </g>
+    </svg>
+    <div class="breath"><p>breathe in · breathe out</p></div>
+    <span class="breath-cap hand">you can start right here ☺</span>
+  </div>
+</header>
+
+<svg class="wave" viewBox="0 0 1200 34" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0 18 Q60 2 120 18 T240 18 T360 18 T480 18 T600 18 T720 18 T840 18 T960 18 T1080 18 T1200 18" fill="none" stroke="#8FAE8B" stroke-width="3" stroke-linecap="round"/>
+</svg>
+
+<section id="care">
+  <svg class="doodle hide-m" style="top:40px;right:4%" width="60" height="60" viewBox="0 0 60 60" aria-hidden="true">
+    <circle cx="30" cy="30" r="10" fill="none" stroke="#EE7B5C" stroke-width="2.5"/>
+    <g stroke="#EE7B5C" stroke-width="2.5" stroke-linecap="round">
+      <ellipse cx="30" cy="12" rx="6" ry="9" fill="#FCE3D3"/><ellipse cx="30" cy="48" rx="6" ry="9" fill="#FCE3D3"/>
+      <ellipse cx="12" cy="30" rx="9" ry="6" fill="#FCE3D3"/><ellipse cx="48" cy="30" rx="9" ry="6" fill="#FCE3D3"/>
+    </g>
+  </svg>
+  <p class="tag">Areas of care</p>
+  <h2>What we can work on together</h2>
+  <p class="lede">Every concern below is common, human, and workable. If yours isn't listed, write to me anyway — the first conversation is for figuring out fit.</p>
+  <div class="areas">
+    <article class="area reveal">
+      <svg width="44" height="30" viewBox="0 0 44 30" aria-hidden="true"><path d="M3 24 Q8 6 14 20 Q19 32 24 14 Q28 3 33 18 Q36 26 41 12" fill="none" stroke="#EE7B5C" stroke-width="3" stroke-linecap="round"/></svg>
+      <h3>Anxiety &amp; overthinking</h3><p>Worry loops, panic, social anxiety, and the exhausting work of holding it all together.</p>
+    </article>
+    <article class="area reveal">
+      <svg width="40" height="34" viewBox="0 0 40 34" aria-hidden="true"><path d="M20 30 Q4 20 6 10 Q8 2 16 6 Q20 8 20 12 Q20 8 24 6 Q32 2 34 10 Q36 20 20 30 Z" fill="none" stroke="#8FAE8B" stroke-width="2.6" stroke-linejoin="round"/></svg>
+      <h3>Low mood &amp; burnout</h3><p>When rest doesn't help anymore — finding the way back to energy and meaning.</p>
+    </article>
+    <article class="area reveal">
+      <svg width="48" height="30" viewBox="0 0 48 30" aria-hidden="true"><circle cx="15" cy="15" r="10" fill="none" stroke="#9CC0D8" stroke-width="2.6"/><circle cx="33" cy="15" r="10" fill="none" stroke="#EE7B5C" stroke-width="2.6"/></svg>
+      <h3>Relationships &amp; family</h3><p>Boundaries, conflict, communication, and patterns that repeat across relationships.</p>
+    </article>
+    <article class="area reveal">
+      <svg width="40" height="34" viewBox="0 0 40 34" aria-hidden="true"><path d="M6 28 Q20 24 20 6 M20 6 Q14 12 12 18 M20 6 Q26 12 28 18 M20 14 Q16 18 15 22 M20 14 Q24 18 25 22" fill="none" stroke="#C4954B" stroke-width="2.6" stroke-linecap="round"/></svg>
+      <h3>Grief &amp; life transitions</h3><p>Loss, moves, career shifts, new parenthood — steadiness through change.</p>
+    </article>
+  </div>
+</section>
+
+<div class="approach" id="approach">
+  <svg class="doodle" style="top:-22px;right:36px" width="60" height="44" viewBox="0 0 60 44" aria-hidden="true">
+    <path d="M6 38 Q30 2 54 38" fill="none" stroke="#FBEFD8" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 9"/>
+  </svg>
+  <p class="tag">My approach</p>
+  <h2>Collaborative, structured, kind</h2>
+  <div class="steps">
+    <div class="reveal"><h3>We begin gently</h3><p>The first two sessions are for your story — no forms rushed at you, no labels before understanding.</p></div>
+    <div class="reveal"><h3>We work with evidence</h3><p>I draw on CBT, ACT, and emotion-focused approaches, chosen for you rather than applied by default.</p></div>
+    <div class="reveal"><h3>We review together</h3><p>Every few weeks we check what's working. Therapy should have direction you can feel.</p></div>
+  </div>
+  <p class="hand" style="margin-top:1.8rem">— and yes, it's okay to not know where to start.</p>
+</div>
+
+<section id="sessions">
+  <p class="tag">Practical details</p>
+  <h2>Sessions &amp; fees</h2>
+  <div class="info">
+    <div class="reveal"><h3>In person</h3><p>Tuesday to Saturday at the Ahmedabad studio. 50-minute sessions.</p></div>
+    <div class="reveal"><h3>Online</h3><p>Video sessions across India in English, Hindi, and Malayalam.</p></div>
+    <div class="reveal"><h3>Fees</h3><p>₹2,500 per session. A limited number of sliding-scale slots are held each month.</p></div>
+    <div class="reveal"><h3>Confidentiality</h3><p>Everything you share stays between us, within the standard ethical limits I'll explain in session one.</p></div>
+  </div>
+</section>
+
+<section id="book" style="padding-bottom:5rem">
+  <div class="book-box">
+    <svg class="doodle" style="top:-26px;left:40px" width="50" height="50" viewBox="0 0 54 54" aria-hidden="true">
+      <path d="M27 6 L31 21 L46 21 L34 30 L38 45 L27 36 L16 45 L20 30 L8 21 L23 21 Z" fill="#F7C59F" stroke="#4A3B52" stroke-width="2" stroke-linejoin="round"/>
+    </svg>
+    <p class="tag">Begin</p>
+    <h2 style="margin:.7rem 0 1rem">Ready when you are</h2>
+    <p class="lede" style="margin:0 auto 2.2rem">Reaching out is often the hardest step, so I keep it simple: one short email, and I'll reply within a working day with available times.</p>
+    <a class="btn" href="mailto:hello@drmeeraiyer.in">hello@drmeeraiyer.in</a>
+    <p class="hand" style="margin-top:1.4rem;font-size:1.35rem">no perfect words needed — "hi, I'd like a session" works.</p>
+  </div>
+</section>
+
+<footer>
+  <span class="serif">Dr. Meera Iyer, M.Phil. Clinical Psychology</span>
+  <p>RCI Reg. No. A00000 · Ahmedabad &amp; Online · © 2026</p>
+  <p style="margin-top:.8rem;font-size:.8rem">If you are in crisis, please contact Tele-MANAS at 14416 — support is available around the clock.</p>
+</footer>
+
+<script>
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

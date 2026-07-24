@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ujala Foundation — Every Child in School</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Archivo+Black&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FDF9F0;
+  --ink:#123A36;        /* deep teal ink */
+  --teal:#0E5E56;
+  --marigold:#F5B301;
+  --tangerine:#E8642C;
+  --sky:#BFDCD7;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:'Archivo',sans-serif;font-weight:500;line-height:1.7;
+}
+a{color:inherit;text-decoration:none}
+a:focus-visible,button:focus-visible{outline:3px solid var(--tangerine);outline-offset:3px}
+.black{font-family:'Archivo Black',sans-serif}
+.hand{font-family:'Caveat',cursive;font-weight:600}
+
+/* signature: marker highlight sweep */
+.hl{position:relative;white-space:nowrap;z-index:1}
+.hl::before{
+  content:"";position:absolute;left:-2%;right:-2%;bottom:8%;height:46%;
+  background:var(--marigold);z-index:-1;transform:skew(-6deg) rotate(-1deg);
+}
+.hl.orange::before{background:var(--tangerine);opacity:.85}
+
+nav{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.3rem clamp(1.2rem,5vw,4rem);
+  border-bottom:3px solid var(--ink);position:sticky;top:0;background:var(--paper);z-index:20;
+}
+.logo{font-family:'Archivo Black',sans-serif;font-size:1.35rem;letter-spacing:-.01em}
+.logo .sun{color:var(--tangerine)}
+nav ul{display:flex;gap:1.8rem;list-style:none;align-items:center}
+nav ul a{font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+nav ul a:hover{color:var(--teal)}
+.pill{
+  background:var(--marigold);border:3px solid var(--ink);padding:.55rem 1.4rem;border-radius:999px;
+  box-shadow:4px 4px 0 var(--ink);transition:transform .15s, box-shadow .15s;display:inline-block;
+  font-weight:700;text-transform:uppercase;font-size:.85rem;letter-spacing:.06em;
+}
+.pill:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
+.pill.big{font-size:1rem;padding:.9rem 2.2rem}
+.pill.orange{background:var(--tangerine);color:var(--paper)}
+
+header{
+  padding:clamp(3.5rem,9vh,6rem) clamp(1.2rem,5vw,4rem) 4rem;
+  max-width:1100px;margin:0 auto;text-align:center;
+}
+.kicker{
+  display:inline-block;background:var(--sky);border:2px solid var(--ink);border-radius:999px;
+  padding:.3rem 1.1rem;font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.6rem;
+}
+header h1{
+  font-family:'Archivo Black',sans-serif;
+  font-size:clamp(2.4rem,7vw,5rem);line-height:1.08;letter-spacing:-.02em;margin-bottom:1.6rem;
+}
+header p.lede{max-width:56ch;margin:0 auto 2.4rem;font-size:1.1rem;color:#2C4F4A}
+.cta-row{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.scribble{display:block;margin:1.6rem auto 0;color:var(--teal);font-size:1.4rem;transform:rotate(-2deg)}
+
+section{padding:4.5rem clamp(1.2rem,5vw,4rem);max-width:1100px;margin:0 auto}
+h2{font-family:'Archivo Black',sans-serif;font-size:clamp(1.8rem,4.2vw,2.8rem);line-height:1.15;letter-spacing:-.01em;margin-bottom:1rem}
+.sub{max-width:58ch;color:#2C4F4A;margin-bottom:2.4rem}
+
+/* programme cards */
+.programmes{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.4rem}
+.card{
+  border:3px solid var(--ink);border-radius:18px;padding:2rem 1.7rem;background:#fff;
+  box-shadow:6px 6px 0 var(--ink);transition:transform .15s, box-shadow .15s;
+}
+.card:hover{transform:translate(3px,3px);box-shadow:3px 3px 0 var(--ink)}
+.card .chip{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:.25rem .8rem;border-radius:999px;border:2px solid var(--ink);margin-bottom:1rem}
+.card:nth-child(1) .chip{background:var(--marigold)}
+.card:nth-child(2) .chip{background:var(--sky)}
+.card:nth-child(3) .chip{background:var(--tangerine);color:var(--paper)}
+.card h3{font-size:1.3rem;font-weight:900;margin-bottom:.6rem}
+.card p{font-size:.95rem;color:#2C4F4A}
+
+/* impact band */
+.impact{
+  background:var(--teal);color:var(--paper);border-top:3px solid var(--ink);border-bottom:3px solid var(--ink);
+}
+.impact-inner{max-width:1100px;margin:0 auto;padding:4rem clamp(1.2rem,5vw,4rem)}
+.impact h2{color:var(--paper)}
+.impact h2 .hl::before{opacity:1}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.4rem;margin-top:2.4rem}
+.fact{border:2px dashed rgba(253,249,240,.5);border-radius:16px;padding:1.6rem}
+.fact strong{font-family:'Archivo Black',sans-serif;font-size:2rem;color:var(--marigold);display:block;line-height:1.1;margin-bottom:.4rem}
+.fact p{font-size:.92rem;color:#D7E7E3}
+
+/* how to help */
+.help{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.4rem}
+.help .card{background:var(--paper)}
+.help .amount{font-family:'Archivo Black',sans-serif;font-size:1.5rem;color:var(--tangerine);display:block;margin-bottom:.4rem}
+
+footer{
+  background:var(--ink);color:var(--paper);padding:3.5rem clamp(1.2rem,5vw,4rem);
+}
+.foot-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;gap:2rem;flex-wrap:wrap;align-items:flex-end}
+footer .logo{color:var(--paper)}
+footer p{font-size:.88rem;color:#9DBBB6;margin-top:.6rem}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1!important;transform:none!important}}
+@media(max-width:700px){nav ul li:not(:last-child){display:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="#">UJALA<span class="sun">*</span> FOUNDATION</a>
+  <ul>
+    <li><a href="#work">Our work</a></li>
+    <li><a href="#impact">Impact</a></li>
+    <li><a href="#help">Get involved</a></li>
+    <li><a class="pill" href="#help">Donate</a></li>
+  </ul>
+</nav>
+
+<header>
+  <span class="kicker">Working across Gujarat since 2014</span>
+  <h1>Every child deserves a <span class="hl">seat in school</span>, not a shift at work.</h1>
+  <p class="lede">Ujala Foundation finds out-of-school children in industrial towns and salt-pan settlements, gets them enrolled, and stays with them until they finish Class 10. Simple mission. Stubborn follow-through.</p>
+  <div class="cta-row">
+    <a class="pill big" href="#help">Sponsor a child's year</a>
+    <a class="pill big orange" href="#work">See how it works</a>
+  </div>
+  <span class="hand scribble">← one year of school costs less than one phone ↓</span>
+</header>
+
+<section id="work">
+  <h2>Three jobs. Done <span class="hl orange">properly.</span></h2>
+  <p class="sub">We don't run fifty programmes. We run three, and we measure all of them child by child, name by name.</p>
+  <div class="programmes">
+    <article class="card reveal">
+      <span class="chip">Find</span>
+      <h3>Doorstep Surveys</h3>
+      <p>Field teams map every settlement in our districts twice a year, identifying children who have dropped out or never enrolled.</p>
+    </article>
+    <article class="card reveal">
+      <span class="chip">Enrol</span>
+      <h3>Back-to-School Bridge</h3>
+      <p>Six-month bridge classes bring children up to grade level, then we walk them — literally — to their government school admission.</p>
+    </article>
+    <article class="card reveal">
+      <span class="chip">Stay</span>
+      <h3>Retention Circles</h3>
+      <p>Community mentors, after-school study rooms, and monthly parent circles keep children in class through Class 10.</p>
+    </article>
+  </div>
+</section>
+
+<div class="impact" id="impact">
+  <div class="impact-inner">
+    <h2>What stubborn follow-through <span class="hl">looks like</span></h2>
+    <div class="facts">
+      <div class="fact reveal"><strong>6,240</strong><p>children enrolled and tracked by name since 2014</p></div>
+      <div class="fact reveal"><strong>91%</strong><p>of enrolled children still in school three years later</p></div>
+      <div class="fact reveal"><strong>38</strong><p>study rooms running every evening across two districts</p></div>
+      <div class="fact reveal"><strong>₹86</strong><p>of every ₹100 donated goes directly to programmes — audited yearly</p></div>
+    </div>
+  </div>
+</div>
+
+<section id="help">
+  <h2>Pick your way <span class="hl">in.</span></h2>
+  <p class="sub">Whether you have money, time, or a company CSR budget, there's a concrete job waiting for you.</p>
+  <div class="help">
+    <article class="card reveal">
+      <span class="amount">₹9,000 / year</span>
+      <h3>Sponsor a child</h3>
+      <p>Covers books, uniforms, study-room access, and mentoring for one child for a full school year. You get their progress report twice a year.</p>
+    </article>
+    <article class="card reveal">
+      <span class="amount">4 hrs / week</span>
+      <h3>Volunteer to teach</h3>
+      <p>Run evening study-room sessions in maths, language, or science — in person in Kutch and Surendranagar, or online.</p>
+    </article>
+    <article class="card reveal">
+      <span class="amount">CSR &amp; grants</span>
+      <h3>Partner with us</h3>
+      <p>Adopt a cluster of study rooms or fund a full survey-to-school cycle. FCRA and 80G compliant, full audit access.</p>
+    </article>
+  </div>
+  <div style="text-align:center;margin-top:2.8rem">
+    <a class="pill big" href="mailto:hello@ujalafoundation.org">Write to us → hello@ujalafoundation.org</a>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-inner">
+    <div>
+      <span class="logo">UJALA<span class="sun" style="color:var(--marigold)">*</span> FOUNDATION</span>
+      <p>Reg. Public Charitable Trust · 80G &amp; FCRA compliant<br>Gandhidham · Surendranagar · Gujarat</p>
+    </div>
+    <p>© 2026 · Annual reports available on request</p>
+  </div>
+</footer>
+
+<script>
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

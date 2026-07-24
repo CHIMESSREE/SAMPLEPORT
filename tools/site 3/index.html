@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vayan — House of Handloom, Kutch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Mulish:ital,wght@0,300;0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --indigo:#251A5E;       /* vibrant royal indigo */
+  --indigo-deep:#1A1147;
+  --rani:#E0246E;         /* rani pink */
+  --marigold:#F2A31B;
+  --flame:#E8632C;
+  --leaf:#2E9B6B;
+  --kora:#F9EDD2;         /* warm unbleached cotton */
+  --kora-dim:#D9C8A8;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  color:var(--kora);
+  font-family:'Mulish',sans-serif;font-weight:300;line-height:1.7;
+  background:
+    radial-gradient(ellipse 90% 60% at 80% -10%, rgba(224,36,110,.35), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 0% 30%, rgba(242,163,27,.18), transparent 60%),
+    radial-gradient(ellipse 80% 60% at 100% 90%, rgba(232,99,44,.22), transparent 60%),
+    linear-gradient(160deg, var(--indigo) 0%, #341A6E 45%, #4A1560 100%);
+  background-attachment:fixed;
+}
+a{color:inherit;text-decoration:none}
+a:focus-visible{outline:2px solid var(--marigold);outline-offset:3px}
+h1,h2,h3{font-family:'Yatra One',system-ui;font-weight:400}
+.mono{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase}
+
+/* mural strips */
+.mural{display:block;width:100%;height:auto}
+.mural-band{background:rgba(26,17,71,.45);border-top:2px solid var(--marigold);border-bottom:2px solid var(--marigold);padding:1.2rem 0}
+
+nav{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.5rem clamp(1.2rem,5vw,4rem);
+  border-bottom:2px solid var(--marigold);
+  position:sticky;top:0;background:rgba(26,17,71,.9);backdrop-filter:blur(8px);z-index:10;
+}
+.wordmark{font-family:'Yatra One',system-ui;font-size:1.7rem;letter-spacing:.06em;color:var(--marigold)}
+.wordmark em{font-style:normal;color:var(--rani)}
+nav ul{display:flex;gap:2.2rem;list-style:none}
+nav ul a{font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;color:var(--kora-dim);transition:color .3s}
+nav ul a:hover{color:var(--marigold)}
+
+header{padding:clamp(3.5rem,9vh,6rem) clamp(1.2rem,5vw,4rem) 2.5rem;text-align:center}
+.eyebrow{color:var(--marigold);margin-bottom:1.4rem}
+header h1{
+  font-size:clamp(2.5rem,7vw,5rem);line-height:1.2;
+  max-width:20ch;margin:0 auto 1.4rem;
+  text-shadow:3px 3px 0 rgba(26,17,71,.6);
+}
+header h1 .pink{color:var(--rani)}
+header h1 .gold{color:var(--marigold)}
+header p{max-width:52ch;margin:0 auto 2.2rem;color:var(--kora-dim);font-size:1.05rem}
+.cta-row{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn{
+  display:inline-block;padding:.9rem 2.3rem;font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;
+  border:2px solid var(--marigold);color:var(--marigold);border-radius:4px;transition:all .3s;
+}
+.btn:hover{background:var(--marigold);color:var(--indigo-deep)}
+.btn.solid{background:var(--rani);border-color:var(--rani);color:var(--kora)}
+.btn.solid:hover{background:transparent;color:var(--rani)}
+
+section{padding:4.5rem clamp(1.2rem,5vw,4rem);max-width:1200px;margin:0 auto}
+.section-head{display:flex;align-items:baseline;gap:1.4rem;margin-bottom:2.6rem;flex-wrap:wrap}
+.section-head h2{font-size:clamp(1.9rem,4vw,2.8rem);color:var(--marigold)}
+.section-head .rule{flex:1;height:2px;background:repeating-linear-gradient(90deg,var(--rani) 0 14px,transparent 14px 22px);min-width:80px;align-self:center}
+.section-head .mono{color:var(--rani)}
+
+.crafts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.4rem}
+.craft{
+  border:2px solid rgba(242,163,27,.45);border-radius:10px;
+  padding:2.2rem 1.8rem;background:rgba(26,17,71,.55);
+  transition:border-color .3s, transform .3s;position:relative;overflow:hidden;
+}
+.craft::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:6px;
+  background:repeating-linear-gradient(90deg,var(--rani) 0 14px,var(--marigold) 14px 28px,var(--leaf) 28px 42px,var(--flame) 42px 56px);
+}
+.craft:hover{border-color:var(--rani);transform:translateY(-4px)}
+.craft h3{font-size:1.35rem;margin:.7rem 0 .8rem;color:var(--kora)}
+.craft p{color:var(--kora-dim);font-size:.95rem}
+.craft .mono{color:var(--marigold)}
+
+.process{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;border:2px solid rgba(242,163,27,.45);border-radius:10px;overflow:hidden}
+.step{padding:2rem 1.6rem;border-right:1px solid rgba(242,163,27,.35);background:rgba(26,17,71,.45)}
+.step:nth-child(even){background:rgba(74,21,96,.45)}
+.step:last-child{border-right:none}
+.step .mono{color:var(--marigold);display:block;margin-bottom:.7rem}
+.step h3{font-size:1.15rem;margin-bottom:.5rem;color:var(--kora)}
+.step p{font-size:.88rem;color:var(--kora-dim)}
+
+.band{
+  background:linear-gradient(120deg,var(--rani),#B31756);color:var(--kora);text-align:center;
+  padding:4rem clamp(1.2rem,5vw,4rem);
+  border-top:3px solid var(--marigold);border-bottom:3px solid var(--marigold);
+}
+.band blockquote{font-family:'Yatra One',system-ui;font-size:clamp(1.5rem,3.2vw,2.3rem);max-width:34ch;margin:0 auto 1rem;line-height:1.45;text-shadow:2px 2px 0 rgba(26,17,71,.35)}
+.band .mono{color:rgba(249,237,210,.85)}
+
+footer{padding:3rem clamp(1.2rem,5vw,4rem);border-top:2px solid var(--marigold);display:flex;justify-content:space-between;gap:2rem;flex-wrap:wrap;align-items:flex-end;background:rgba(26,17,71,.6)}
+footer .wordmark{font-size:1.3rem}
+footer p{font-size:.85rem;color:var(--kora-dim)}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1!important;transform:none!important}}
+@media(max-width:640px){
+  nav ul{display:none}
+  .step{border-right:none;border-bottom:1px solid rgba(242,163,27,.35)}
+  .step:last-child{border-bottom:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="wordmark" href="#">वयन VAY<em>A</em>N</a>
+  <ul>
+    <li><a href="#crafts">Crafts</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#atelier">Atelier</a></li>
+    <li><a href="#contact">Enquire</a></li>
+  </ul>
+</nav>
+
+<header>
+  <p class="eyebrow mono">House of Handloom · Kutch, Gujarat · Est. 1962</p>
+  <h1>Cloth that remembers the <span class="pink">hands</span> that <span class="gold">made</span> it</h1>
+  <p>Vayan works with fourth-generation weavers, ajrakh printers, and bandhani artisans across Kutch — producing natural-dyed textiles for design houses, collectors, and homes that value the slow way.</p>
+  <div class="cta-row">
+    <a class="btn solid" href="#crafts">Explore the crafts</a>
+    <a class="btn" href="#contact">Trade enquiries</a>
+  </div>
+</header>
+
+<!-- MURAL: tree of life with peacocks -->
+<div class="mural-band" aria-hidden="true">
+<svg class="mural" viewBox="0 0 1200 150" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+  <g stroke="#F2A31B" stroke-width="2.5" fill="none" stroke-linecap="round">
+    <!-- tree trunk & branches -->
+    <path d="M600 140 L600 60 M600 90 Q560 80 530 55 M600 90 Q640 80 670 55 M600 70 Q575 55 560 35 M600 70 Q625 55 640 35"/>
+    <!-- leaves -->
+    <circle cx="530" cy="50" r="9" fill="#2E9B6B" stroke="none"/>
+    <circle cx="670" cy="50" r="9" fill="#2E9B6B" stroke="none"/>
+    <circle cx="560" cy="30" r="8" fill="#E0246E" stroke="none"/>
+    <circle cx="640" cy="30" r="8" fill="#E0246E" stroke="none"/>
+    <circle cx="600" cy="48" r="11" fill="#F2A31B" stroke="none"/>
+  </g>
+  <!-- peacock left -->
+  <g stroke="#E0246E" stroke-width="2.5" fill="none" stroke-linecap="round">
+    <path d="M470 130 Q470 95 495 92 Q512 90 515 105 Q517 118 505 122"/>
+    <path d="M470 130 Q430 128 405 105"/>
+    <path d="M470 130 Q432 120 415 95" />
+    <path d="M470 130 Q440 112 430 85"/>
+    <circle cx="405" cy="103" r="5" fill="#F2A31B" stroke="none"/>
+    <circle cx="415" cy="92" r="5" fill="#F2A31B" stroke="none"/>
+    <circle cx="430" cy="83" r="5" fill="#F2A31B" stroke="none"/>
+    <path d="M513 96 L522 88 M515 100 L526 96" stroke="#F2A31B"/>
+    <circle cx="513" cy="102" r="1.8" fill="#F9EDD2" stroke="none"/>
+  </g>
+  <!-- peacock right (mirrored) -->
+  <g stroke="#E0246E" stroke-width="2.5" fill="none" stroke-linecap="round">
+    <path d="M730 130 Q730 95 705 92 Q688 90 685 105 Q683 118 695 122"/>
+    <path d="M730 130 Q770 128 795 105"/>
+    <path d="M730 130 Q768 120 785 95"/>
+    <path d="M730 130 Q760 112 770 85"/>
+    <circle cx="795" cy="103" r="5" fill="#F2A31B" stroke="none"/>
+    <circle cx="785" cy="92" r="5" fill="#F2A31B" stroke="none"/>
+    <circle cx="770" cy="83" r="5" fill="#F2A31B" stroke="none"/>
+    <path d="M687 96 L678 88 M685 100 L674 96" stroke="#F2A31B"/>
+    <circle cx="687" cy="102" r="1.8" fill="#F9EDD2" stroke="none"/>
+  </g>
+  <!-- flanking butas (paisleys) -->
+  <g stroke="#F9EDD2" stroke-width="2" fill="none">
+    <path d="M180 120 Q160 95 180 78 Q205 60 215 88 Q222 110 195 122 Q185 126 180 120 Z"/>
+    <circle cx="196" cy="95" r="6" stroke="#E0246E"/>
+    <path d="M1020 120 Q1040 95 1020 78 Q995 60 985 88 Q978 110 1005 122 Q1015 126 1020 120 Z"/>
+    <circle cx="1004" cy="95" r="6" stroke="#E0246E"/>
+  </g>
+  <!-- dotted ground line -->
+  <g fill="#F2A31B">
+    <circle cx="60" cy="140" r="3"/><circle cx="110" cy="140" r="3"/><circle cx="160" cy="140" r="3"/><circle cx="210" cy="140" r="3"/><circle cx="260" cy="140" r="3"/><circle cx="310" cy="140" r="3"/><circle cx="360" cy="140" r="3"/><circle cx="410" cy="140" r="3"/><circle cx="790" cy="140" r="3"/><circle cx="840" cy="140" r="3"/><circle cx="890" cy="140" r="3"/><circle cx="940" cy="140" r="3"/><circle cx="990" cy="140" r="3"/><circle cx="1040" cy="140" r="3"/><circle cx="1090" cy="140" r="3"/><circle cx="1140" cy="140" r="3"/>
+  </g>
+</svg>
+</div>
+
+<section id="crafts">
+  <div class="section-head">
+    <span class="mono">The looms</span>
+    <h2>Four living traditions</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="crafts">
+    <article class="craft reveal">
+      <span class="mono">Ajrakhpur</span>
+      <h3>Ajrakh Block Print</h3>
+      <p>Sixteen stages of resist printing and river washing. Indigo, madder, and iron black — the same palette carried for four centuries.</p>
+    </article>
+    <article class="craft reveal">
+      <span class="mono">Bhujodi</span>
+      <h3>Kutchi Weaving</h3>
+      <p>Extra-weft shawls and stoles on pit looms, woven in desi wool and kala cotton with motifs drawn from the Rann itself.</p>
+    </article>
+    <article class="craft reveal">
+      <span class="mono">Bhuj</span>
+      <h3>Bandhani Tie-Dye</h3>
+      <p>Thousands of fingertip knots per dupatta. Each dot is tied by hand before the cloth ever meets the dye vat.</p>
+    </article>
+    <article class="craft reveal">
+      <span class="mono">Nirona</span>
+      <h3>Rogan &amp; Embroidery</h3>
+      <p>Castor-oil paint drawn in freehand thread-lines, alongside mirror-work embroidery from twelve village clusters.</p>
+    </article>
+  </div>
+</section>
+
+<!-- MURAL: Warli-style dance circle -->
+<div class="mural-band" aria-hidden="true">
+<svg class="mural" viewBox="0 0 1200 110" xmlns="http://www.w3.org/2000/svg">
+  <g stroke="#F9EDD2" stroke-width="2.2" fill="none" stroke-linecap="round">
+    <!-- repeated dancing figures holding hands -->
+    <g id="row">
+      <!-- one figure = two triangles + head + limbs; repeat manually across -->
+      <g transform="translate(120,20)">
+        <circle cx="0" cy="8" r="7"/><path d="M-10 18 L10 18 L0 40 Z M0 40 L-10 62 L10 62 Z"/><path d="M-10 22 L-34 12 M10 22 L34 12 M-6 62 L-14 84 M6 62 L14 84"/>
+      </g>
+      <g transform="translate(220,20)">
+        <circle cx="0" cy="8" r="7"/><path d="M-10 18 L10 18 L0 40 Z M0 40 L-10 62 L10 62 Z"/><path d="M-10 22 L-34 12 M10 22 L34 12 M-6 62 L-14 84 M6 62 L14 84"/>
+      </g>
+      <g transform="translate(320,20)">
+        <circle cx="0" cy="8" r="7"/><path d="M-10 18 L10 18 L0 40 Z M0 40 L-10 62 L10 62 Z"/><path d="M-10 22 L-34 12 M10 22 L34 12 M-6 62 L-14 84 M6 62 L14 84"/>
+      </g>
+      <g transform="translate(420,20)">
+        <circle cx="0" cy="8" r="7"/><path d="M-10 18 L10 18 L0 40 Z M0 40 L-10 62 L10 62 Z"/><path d="M-10 22 L-34 12 M10 22 L34 12 M-6 62 L-14 84 M6 62 L14 84"/>
+      </g>
+      <g transform="translate(520,20)">
+        <circle cx="0" cy="8" r="7"/><path d="M-10 18 L10 18 L0 40 Z M0 40 L-10 62 L10 62 Z"/><path d="M-10 22 L-34 12 M10 22 L34 12 M-6 62 L-14 84 M6 62 L14 84"/>
+      </g>
+      <g transform="translate(620,20)">
+        <circle cx="0" cy="8" r="7"/><path d="M-10 18 L10 18 L0 40 Z M0 40 L-10 62 L10 62 Z"/><path d="M-10 22 L-34 12 M10 22 L34 12 M-6 62 L-14 84 M6 62 L14 84"/>
+      </g>
+      <g transform="translate(720,20)">
+        <circle cx="0" cy="8" r="7"/><path d="M-10 18 L10 18 L0 40 Z M0 40 L-10 62 L10 62 Z"/><path d="M-10 22 L-34 12 M10 22 L34 12 M-6 62 L-14 84 M6 62 L14 84"/>
+      </g>
+      <g transform="translate(820,20)">
+        <circle cx="0" cy="8" r="7"/><path d="M-10 18 L10 18 L0 40 Z M0 40 L-10 62 L10 62 Z"/><path d="M-10 22 L-34 12 M10 22 L34 12 M-6 62 L-14 84 M6 62 L14 84"/>
+      </g>
+      <g transform="translate(920,20)">
+        <circle cx="0" cy="8" r="7"/><path d="M-10 18 L10 18 L0 40 Z M0 40 L-10 62 L10 62 Z"/><path d="M-10 22 L-34 12 M10 22 L34 12 M-6 62 L-14 84 M6 62 L14 84"/>
+      </g>
+      <g transform="translate(1020,20)">
+        <circle cx="0" cy="8" r="7"/><path d="M-10 18 L10 18 L0 40 Z M0 40 L-10 62 L10 62 Z"/><path d="M-10 22 L-34 12 M10 22 L34 12 M-6 62 L-14 84 M6 62 L14 84"/>
+      </g>
+    </g>
+    <!-- sun -->
+    <circle cx="60" cy="40" r="14" stroke="#F2A31B"/>
+    <g stroke="#F2A31B"><path d="M60 18 L60 8 M60 62 L60 72 M38 40 L28 40 M82 40 L92 40 M45 25 L38 18 M75 25 L82 18 M45 55 L38 62 M75 55 L82 62"/></g>
+    <!-- moon -->
+    <path d="M1140 28 A16 16 0 1 0 1152 55 A12 12 0 1 1 1140 28 Z" stroke="#E0246E"/>
+  </g>
+</svg>
+</div>
+
+<section id="process">
+  <div class="section-head">
+    <span class="mono">Field to fold</span>
+    <h2>How a Vayan textile is made</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="process">
+    <div class="step reveal"><span class="mono">Fibre</span><h3>Kala cotton &amp; desi wool</h3><p>Rain-fed indigenous cotton and local sheep wool, sourced within 100 km of the loom.</p></div>
+    <div class="step reveal"><span class="mono">Dye</span><h3>Vat &amp; river</h3><p>Indigo fermented in earthen vats; madder, pomegranate, and iron fixed by sun and river washing.</p></div>
+    <div class="step reveal"><span class="mono">Loom</span><h3>Woven by name</h3><p>Every piece carries the weaver's name on its selvage tag. No anonymous cloth leaves the atelier.</p></div>
+    <div class="step reveal"><span class="mono">Fold</span><h3>Finished &amp; documented</h3><p>Each textile is photographed, numbered, and archived before it travels to you.</p></div>
+  </div>
+</section>
+
+<div class="band" id="atelier">
+  <blockquote>"The loom is older than the house it sits in. We are only its current keepers."</blockquote>
+  <p class="mono">— Ramjibhai Vankar, Master Weaver, Bhujodi</p>
+</div>
+
+<section id="contact">
+  <div class="section-head">
+    <span class="mono">Enquire</span>
+    <h2>Work with the atelier</h2>
+    <div class="rule"></div>
+  </div>
+  <p style="max-width:56ch;color:var(--kora-dim);margin-bottom:2rem">We take a limited number of trade collaborations, custom yardage commissions, and studio visits each season. Write to us and we'll respond within two working days.</p>
+  <div class="cta-row" style="justify-content:flex-start">
+    <a class="btn solid" href="mailto:atelier@vayan.in">atelier@vayan.in</a>
+    <a class="btn" href="tel:+912836000000">+91 2836 000 000</a>
+  </div>
+</section>
+
+<!-- MURAL: elephant procession -->
+<div class="mural-band" aria-hidden="true">
+<svg class="mural" viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg">
+  <g stroke="#F2A31B" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <g id="ele" transform="translate(160,20)">
+      <path d="M0 70 L0 40 Q0 18 25 15 Q55 12 62 32 Q66 44 60 50 Q70 52 72 62 Q73 74 66 78 M8 70 L8 88 M28 70 L28 88 M46 74 L46 88 M60 78 L60 88 M0 70 Q20 78 46 74"/>
+      <circle cx="46" cy="30" r="2.2" fill="#F9EDD2" stroke="none"/>
+      <path d="M20 15 Q18 2 34 4" stroke="#E0246E"/>
+      <path d="M14 34 Q26 30 38 34 L36 46 Q26 50 16 46 Z" stroke="#E0246E"/>
+      <circle cx="26" cy="40" r="2.5" fill="#E0246E" stroke="none"/>
+    </g>
+    <use href="#ele" transform="translate(280,0)"/>
+    <use href="#ele" transform="translate(560,0)"/>
+    <use href="#ele" transform="translate(840,0)"/>
+  </g>
+  <g fill="#E0246E">
+    <circle cx="120" cy="108" r="3"/><circle cx="240" cy="108" r="3"/><circle cx="360" cy="108" r="3"/><circle cx="480" cy="108" r="3"/><circle cx="600" cy="108" r="3"/><circle cx="720" cy="108" r="3"/><circle cx="840" cy="108" r="3"/><circle cx="960" cy="108" r="3"/><circle cx="1080" cy="108" r="3"/>
+  </g>
+</svg>
+</div>
+
+<footer>
+  <div>
+    <a class="wordmark" href="#">वयन VAY<em>A</em>N</a>
+    <p>House of Handloom · Ajrakhpur Road, Kutch, Gujarat</p>
+  </div>
+  <p class="mono">Woven, not manufactured · © 2026</p>
+</footer>
+
+<script>
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

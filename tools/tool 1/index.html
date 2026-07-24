@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DECK — brutalist proposal studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;600;800&family=Anton&family=Space+Grotesk:wght@400;500;700&family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box; margin:0; padding:0}
+:root{
+  --ui-bg:#0A0A0A; --ui-fg:#F2F2F2; --ui-dim:#6E6E6E; --ui-line:#242424;
+  --ui-hot:#F5D949; --ui-pop:#F49EF2;
+}
+html,body{height:100%}
+body{
+  background:var(--ui-bg); color:var(--ui-fg);
+  font-family:'Space Grotesk',sans-serif; overflow:hidden;
+}
+
+/* ══ TOP RAIL ══ */
+.rail{
+  position:fixed; top:0; left:0; right:0; height:46px; z-index:60;
+  display:flex; align-items:center; gap:14px; padding:0 14px;
+  background:var(--ui-bg); border-bottom:1px solid var(--ui-line);
+  font-family:'DM Mono',monospace; font-size:10px; letter-spacing:1.6px; text-transform:uppercase;
+}
+.rail .mark{font-family:'Archivo Black',sans-serif; font-size:15px; letter-spacing:-.6px; text-transform:none}
+.rail .sep{width:1px; height:18px; background:var(--ui-line)}
+.rail .dim{color:var(--ui-dim)}
+.rail .spacer{flex:1}
+.rbtn{
+  background:none; border:1px solid var(--ui-line); color:var(--ui-fg); cursor:pointer;
+  font-family:'DM Mono',monospace; font-size:10px; letter-spacing:1.4px; text-transform:uppercase;
+  padding:7px 11px; transition:.15s;
+}
+.rbtn:hover{background:var(--ui-fg); color:var(--ui-bg)}
+.rbtn.hot{background:var(--ui-hot); color:#000; border-color:var(--ui-hot)}
+.rbtn.hot:hover{filter:brightness(1.12); background:var(--ui-hot); color:#000}
+
+/* ══ CANVAS ══ */
+.canvas{
+  position:fixed; top:46px; left:0; right:0; bottom:132px; z-index:1;
+  display:flex; align-items:center; justify-content:center; overflow:hidden;
+  background:
+    linear-gradient(0deg, rgba(244,158,242,.05), transparent 55%),
+    repeating-linear-gradient(90deg, #0D0D0D 0 1px, transparent 1px 40px),
+    repeating-linear-gradient(0deg, #0D0D0D 0 1px, transparent 1px 40px), var(--ui-bg);
+}
+#stage{transform-origin:center center}
+
+/* ══ FILMSTRIP ══ */
+.strip{
+  position:fixed; left:0; right:0; bottom:0; height:132px; z-index:60;
+  background:var(--ui-bg); border-top:1px solid var(--ui-line);
+  display:flex; align-items:center; gap:10px; padding:12px 14px; overflow-x:auto;
+}
+.thumb{
+  flex:0 0 auto; width:152px; height:86px; border:1px solid var(--ui-line); position:relative;
+  cursor:pointer; overflow:hidden; background:#000; transition:.15s;
+}
+.thumb.on{border-color:var(--ui-hot); box-shadow:0 0 0 2px rgba(245,217,73,.25)}
+.thumb .mini{position:absolute; top:0; left:0; width:1280px; height:720px; transform:scale(.1187); transform-origin:top left; pointer-events:none}
+.thumb .idx{
+  position:absolute; left:0; bottom:0; z-index:3; background:var(--ui-bg); color:var(--ui-dim);
+  font-family:'DM Mono',monospace; font-size:9px; padding:2px 5px;
+}
+.thumb .kill{
+  position:absolute; right:0; top:0; z-index:3; width:18px; height:18px; border:none; cursor:pointer;
+  background:rgba(0,0,0,.7); color:#fff; font-size:10px; opacity:0;
+}
+.thumb:hover .kill{opacity:1}
+.thumb .kill:hover{background:var(--ui-pop); color:#000}
+.addslide{
+  flex:0 0 auto; width:82px; height:86px; border:1px dashed var(--ui-line); background:none;
+  color:var(--ui-dim); cursor:pointer; font-family:'DM Mono',monospace; font-size:9px;
+  letter-spacing:1.2px; text-transform:uppercase;
+}
+.addslide:hover{border-color:var(--ui-hot); color:var(--ui-hot)}
+
+/* ══ FLOATING INSPECTOR ══ */
+.insp{
+  position:fixed; z-index:90; width:268px; background:#000; border:1px solid var(--ui-hot);
+  display:none; flex-direction:column; box-shadow:0 20px 50px rgba(0,0,0,.75);
+}
+.insp.open{display:flex}
+.insp .head{
+  display:flex; align-items:center; gap:8px; padding:8px 10px; background:var(--ui-hot); color:#000;
+  font-family:'DM Mono',monospace; font-size:9.5px; letter-spacing:1.6px; text-transform:uppercase;
+  cursor:grab;
+}
+.insp .head b{flex:1; font-weight:500}
+.insp .head button{background:none; border:none; cursor:pointer; font-size:12px; line-height:1; color:#000}
+.insp .body{padding:10px; display:flex; flex-direction:column; gap:9px; max-height:60vh; overflow-y:auto}
+.grp{display:flex; flex-direction:column; gap:5px}
+.grp>label{font-family:'DM Mono',monospace; font-size:8.5px; letter-spacing:1.4px; text-transform:uppercase; color:var(--ui-dim)}
+.seg{display:flex; gap:0; border:1px solid var(--ui-line)}
+.seg button{
+  flex:1; background:none; border:none; border-right:1px solid var(--ui-line); cursor:pointer;
+  color:var(--ui-fg); font-family:'DM Mono',monospace; font-size:9.5px; padding:6px 2px; transition:.12s;
+}
+.seg button:last-child{border-right:none}
+.seg button:hover{background:#1A1A1A}
+.seg button.on{background:var(--ui-fg); color:#000}
+.swatches{display:flex; flex-wrap:wrap; gap:5px}
+.sw{width:22px; height:22px; border:1px solid var(--ui-line); cursor:pointer; padding:0}
+.sw:hover{border-color:var(--ui-fg)}
+.sw.pick{position:relative; overflow:hidden}
+.sw.pick input{position:absolute; inset:-6px; width:200%; height:200%; border:none; padding:0; cursor:pointer}
+.insp select, .insp input[type=range]{width:100%}
+.insp select{
+  background:#111; color:var(--ui-fg); border:1px solid var(--ui-line); padding:6px;
+  font-family:'Space Grotesk',sans-serif; font-size:11px;
+}
+.insp input[type=range]{accent-color:var(--ui-hot)}
+.rowbtns{display:flex; gap:6px}
+.rowbtns button{
+  flex:1; background:none; border:1px solid var(--ui-line); color:var(--ui-fg); cursor:pointer;
+  font-family:'DM Mono',monospace; font-size:9px; letter-spacing:1.2px; text-transform:uppercase; padding:7px 4px;
+}
+.rowbtns button:hover{background:var(--ui-fg); color:#000}
+.rowbtns button.danger:hover{background:var(--ui-pop); color:#000}
+.val{font-family:'DM Mono',monospace; font-size:9px; color:var(--ui-hot)}
+
+/* ══════════════ SLIDE ══════════════ */
+.slide{
+  width:1280px; height:720px; position:relative; overflow:hidden; background:#000;
+  font-family:'Archivo',sans-serif; color:#fff; flex:0 0 auto;
+}
+.slide .sbg{position:absolute; inset:0; background-size:cover; background-position:center; z-index:0}
+.slide .stint{position:absolute; inset:0; z-index:1}
+.slide .pad{position:absolute; inset:0; z-index:2; padding:52px 58px; display:flex; flex-direction:column}
+
+/* corner furniture — the signature */
+.meta{
+  position:absolute; left:58px; bottom:34px; z-index:5;
+  font-family:'DM Mono',monospace; font-size:9px; line-height:1.45; letter-spacing:.4px;
+}
+.stamp{
+  position:absolute; right:58px; bottom:32px; z-index:5;
+  width:26px; height:26px; border:2px solid currentColor; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+}
+.stamp:after{content:''; width:9px; height:9px; border:2px solid currentColor; border-radius:50% 50% 50% 0; transform:rotate(-45deg)}
+
+/* type primitives */
+.huge{font-family:'Archivo Black',sans-serif; font-size:110px; line-height:.86; letter-spacing:-4px; text-transform:uppercase}
+.big{font-family:'Archivo Black',sans-serif; font-size:58px; line-height:.94; letter-spacing:-2px; text-transform:uppercase}
+.mid{font-family:'Archivo',sans-serif; font-weight:800; font-size:26px; line-height:1.12; letter-spacing:-.4px}
+.kick{font-family:'DM Mono',monospace; font-size:11px; letter-spacing:3px; text-transform:uppercase}
+.body{font-family:'Space Grotesk',sans-serif; font-size:15px; line-height:1.55; font-weight:400}
+
+/* blocks */
+.block{position:relative}
+.arrow{display:block; width:100%; height:auto}
+.card{position:relative; flex:1; border-radius:26px; padding:30px 26px; display:flex; flex-direction:column}
+.card .n{font-family:'Archivo Black',sans-serif; font-size:64px; line-height:.9; letter-spacing:-2px}
+.card .h{font-family:'Archivo',sans-serif; font-weight:800; font-size:18px; margin-top:auto}
+.card .p{font-family:'Space Grotesk',sans-serif; font-size:12.5px; line-height:1.45; margin-top:8px}
+.priceline{
+  position:relative; display:flex; align-items:baseline; gap:16px;
+  border-bottom:3px solid currentColor; padding:2px 0 3px;
+  font-family:'Archivo Black',sans-serif; font-size:27px; letter-spacing:-.8px; text-transform:uppercase;
+}
+.priceline .l{flex:1}
+.pill{
+  position:relative; display:flex; align-items:center; gap:22px; border-radius:99px;
+  padding:14px 30px; font-family:'Archivo Black',sans-serif; font-size:44px; letter-spacing:-1.5px;
+}
+.pill .lbl{font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:500; letter-spacing:0; line-height:1.25}
+.pill .arw{flex:1; height:3px; background:currentColor; position:relative}
+.pill .arw:after{content:''; position:absolute; right:-2px; top:-7px; border:8px solid transparent; border-left-color:currentColor}
+.ruler{display:flex; border-radius:99px; overflow:hidden}
+.ruler div{flex:1; text-align:center; font-family:'Space Grotesk',sans-serif; font-size:11px; padding:7px 0; border-right:1px solid rgba(255,255,255,.25)}
+.ruler div:last-child{border-right:none}
+.side{position:absolute; font-family:'Archivo Black',sans-serif; font-size:56px; letter-spacing:-2px; text-transform:uppercase}
+
+/* editing affordances */
+[data-ed]{transition:box-shadow .12s}
+[data-ed]:hover{box-shadow:0 0 0 1.5px rgba(245,217,73,.55)}
+[data-ed].sel{box-shadow:0 0 0 2px var(--ui-hot)}
+[contenteditable]{outline:none}
+
+/* ══ PRINT ══ */
+@page{ size:338.7mm 190.5mm; margin:0 }
+@media print{
+  .rail,.strip,.insp,.canvas{position:static; display:block; overflow:visible; border:none; background:#fff}
+  .rail,.strip,.insp{display:none !important}
+  body{overflow:visible; background:#fff}
+  #stage{transform:none !important; display:block !important}
+  .slide{display:block !important; break-after:page; page-break-after:always; box-shadow:none}
+  .slide:last-child{break-after:auto}
+  [data-ed]{box-shadow:none !important}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ RAIL ══ -->
+<div class="rail">
+  <span class="mark">DECK</span>
+  <span class="sep"></span>
+  <span class="dim">Proposal studio</span>
+  <span class="spacer"></span>
+  <span class="dim" id="hintTxt">Click any block to edit it</span>
+  <span class="sep"></span>
+  <button class="rbtn" id="themeBtn">Theme</button>
+  <button class="rbtn" id="saveBtn">Save</button>
+  <button class="rbtn" id="openBtn">Open</button>
+  <input type="file" id="openFile" accept=".json" hidden>
+  <button class="rbtn hot" id="pdfBtn">PDF</button>
+</div>
+
+<!-- ══ CANVAS ══ -->
+<div class="canvas" id="canvas">
+  <div id="stage"></div>
+</div>
+
+<!-- ══ FILMSTRIP ══ -->
+<div class="strip" id="strip"></div>
+
+<!-- ══ INSPECTOR ══ -->
+<div class="insp" id="insp">
+  <div class="head" id="inspHead"><b id="inspTitle">Block</b><button id="inspClose">✕</button></div>
+  <div class="body" id="inspBody"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const stage = $('stage');
+
+/* ══════════ THEME ══════════ */
+const THEME = { pop:'#F49EF2', hot:'#F5D949', ink:'#000000', paper:'#FFFFFF', deep:'#0A0A0A' };
+const SWATCH = () => [THEME.pop, THEME.hot, THEME.ink, THEME.paper, THEME.deep, '#FF4D3D', '#3DFF9E', '#3D6BFF'];
+
+/* ══════════ SLIDE LIBRARY ══════════
+   Each is plain HTML. data-ed marks an editable block; data-kind drives which
+   controls the inspector offers.                                              */
+const meta = (n,label) => `
+  <div class="meta" data-ed data-kind="text">Page ${n}<br>${label}<br>Studio name x<br>Client name</div>
+  <div class="stamp" data-ed data-kind="box"></div>`;
+
+const LIB = {
+  statement:{ name:'Statement', build:(n)=>`
+    <div class="pad" style="padding:70px">
+      <div class="block" data-ed data-kind="box" style="background:${THEME.pop}; color:#000; flex:1; padding:46px 50px; display:flex; flex-direction:column">
+        <div class="huge" data-ed data-kind="text" contenteditable>Your<br>investment</div>
+        <svg class="arrow" data-ed data-kind="box" viewBox="0 0 400 90" style="margin-top:auto; fill:currentColor">
+          <polygon points="0,42 300,42 300,10 400,50 300,90 300,58 0,58"/>
+        </svg>
+      </div>
+    </div>
+    ${meta(n,'Statement')}`},
+
+  pricing:{ name:'Price list', build:(n)=>`
+    <div class="pad" style="padding:0">
+      <div class="block" data-ed data-kind="box" style="background:${THEME.paper}; color:#000; flex:1; padding:56px 60px; display:flex; flex-direction:column; gap:9px">
+        <div class="priceline" data-ed data-kind="row"><span class="l" contenteditable>Brand strategy</span><span contenteditable>$5,849.00</span></div>
+        <div class="priceline" data-ed data-kind="row"><span class="l" contenteditable>Social media templates</span><span contenteditable>$3,549.00</span></div>
+        <div class="priceline" data-ed data-kind="row"><span class="l" contenteditable>Content production</span><span contenteditable>$7,249.00</span></div>
+        <div class="priceline" data-ed data-kind="row"><span class="l" contenteditable>Community management</span><span contenteditable>$5,849.00</span></div>
+        <div style="height:52px"></div>
+        <div class="priceline" data-ed data-kind="row"><span class="l" contenteditable>Subtotal</span><span contenteditable>$22,496.00</span></div>
+        <div class="priceline" data-ed data-kind="row"><span class="l" contenteditable>Discount</span><span contenteditable>-$1,254.00</span></div>
+        <div class="priceline" data-ed data-kind="row" style="border-bottom:none; margin-top:18px; font-size:34px"><span class="l" contenteditable>Total</span><span contenteditable>$21,242.00</span></div>
+      </div>
+    </div>
+    ${meta(n,'Pricing breakdown')}`},
+
+  cards:{ name:'Three cards', build:(n)=>`
+    <div class="pad" style="padding:80px 70px; justify-content:center">
+      <div style="display:flex; gap:22px; height:440px">
+        <div class="card" data-ed data-kind="box" style="background:${THEME.hot}; color:#000">
+          <div class="n" data-ed data-kind="text" contenteditable>01</div>
+          <div class="h" data-ed data-kind="text" contenteditable>Deliverables</div>
+          <div class="p" data-ed data-kind="text" contenteditable>Packaged neatly and handed over as you go. Print-ready files and working documents, all delivered on completion.</div>
+        </div>
+        <div class="card" data-ed data-kind="box" style="background:${THEME.hot}; color:#000">
+          <div class="n" data-ed data-kind="text" contenteditable>02</div>
+          <div class="h" data-ed data-kind="text" contenteditable>Timeline</div>
+          <div class="p" data-ed data-kind="text" contenteditable>Most projects run six to eight weeks. Depending on scope, yours could be shorter or longer — we'll say which before we start.</div>
+        </div>
+        <div class="card" data-ed data-kind="box" style="background:${THEME.hot}; color:#000">
+          <div class="n" data-ed data-kind="text" contenteditable>03</div>
+          <div class="h" data-ed data-kind="text" contenteditable>Revisions</div>
+          <div class="p" data-ed data-kind="text" contenteditable>Two rounds are included. Revisions mean tweaks and minimal changes, not whole redesigns. Further rounds are billed hourly.</div>
+        </div>
+      </div>
+    </div>
+    ${meta(n,'Process')}`},
+
+  timeline:{ name:'Timeline', build:(n)=>`
+    <div class="pad" style="padding:0">
+      <div class="block" data-ed data-kind="box" style="background:${THEME.pop}; color:#000; flex:1; padding:44px 50px; display:flex; flex-direction:column; position:relative">
+        <div class="side" data-ed data-kind="text" contenteditable style="left:12px; bottom:150px; transform:rotate(-90deg); transform-origin:left bottom">Start</div>
+        <div class="side" data-ed data-kind="text" contenteditable style="right:16px; top:30px; writing-mode:vertical-rl">Finish</div>
+        <div style="display:flex; flex-direction:column; gap:18px; padding:6px 90px 0 96px">
+          <div class="pill" data-ed data-kind="box" style="background:#000; color:${THEME.hot}; margin-right:34%">
+            <span contenteditable>01</span><span class="arw"></span><span class="lbl" contenteditable>Discovery<br>and research</span>
+          </div>
+          <div class="pill" data-ed data-kind="box" style="background:#000; color:${THEME.hot}; margin-left:12%; margin-right:16%">
+            <span contenteditable>02</span><span class="arw"></span><span class="lbl" contenteditable>Strategy<br>and design</span>
+          </div>
+          <div class="pill" data-ed data-kind="box" style="background:#000; color:${THEME.hot}; margin-left:28%">
+            <span contenteditable>03</span><span class="arw"></span><span class="lbl" contenteditable>Build<br>and launch</span>
+          </div>
+        </div>
+        <div class="ruler" data-ed data-kind="box" style="background:#000; color:#fff; margin-top:auto">
+          <div contenteditable>Week 1</div><div contenteditable>Week 2</div><div contenteditable>Week 3</div><div contenteditable>Week 4</div>
+          <div contenteditable>Week 5</div><div contenteditable>Week 6</div><div contenteditable>Week 7</div><div contenteditable>Week 8</div>
+        </div>
+      </div>
+    </div>
+    ${meta(n,'Timeline')}`},
+
+  cover:{ name:'Cover', build:(n)=>`
+    <div class="pad" style="justify-content:flex-end; padding:58px 62px">
+      <div class="kick" data-ed data-kind="text" contenteditable style="color:${THEME.hot}">Social media proposal · 2026</div>
+      <div class="huge" data-ed data-kind="text" contenteditable style="margin-top:18px">Feed<br>worth<br>following</div>
+      <div style="display:flex; gap:60px; margin-top:34px; border-top:3px solid currentColor; padding-top:18px">
+        <div class="body" data-ed data-kind="text" contenteditable>Prepared for<br><b>Client name</b></div>
+        <div class="body" data-ed data-kind="text" contenteditable>Prepared by<br><b>Your studio</b></div>
+        <div class="body" data-ed data-kind="text" contenteditable>Valid until<br><b>30 days</b></div>
+      </div>
+    </div>
+    ${meta(n,'Cover')}`},
+
+  split:{ name:'Image + text', build:(n)=>`
+    <div class="pad" style="padding:0; flex-direction:row">
+      <div class="block" data-ed data-kind="image" style="flex:0 0 46%; background:#1A1A1A; background-size:cover; background-position:center"></div>
+      <div class="block" data-ed data-kind="box" style="flex:1; background:${THEME.hot}; color:#000; padding:56px 50px; display:flex; flex-direction:column; justify-content:center">
+        <div class="kick" data-ed data-kind="text" contenteditable>The work</div>
+        <div class="big" data-ed data-kind="text" contenteditable style="margin-top:14px">What we<br>actually do</div>
+        <div class="body" data-ed data-kind="text" contenteditable style="margin-top:20px; max-width:44ch">Strategy, shooting, editing, copy and community — run by the same small team, so nothing is lost in a handover. You approve the month; we publish it.</div>
+      </div>
+    </div>
+    ${meta(n,'Overview')}`},
+
+  scope:{ name:'Scope list', build:(n)=>`
+    <div class="pad" style="padding:60px 62px">
+      <div class="kick" data-ed data-kind="text" contenteditable style="color:${THEME.pop}">Scope of work</div>
+      <div class="big" data-ed data-kind="text" contenteditable style="margin-top:12px">Everything<br>included</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px 40px; margin-top:34px">
+        <div class="priceline" data-ed data-kind="row" style="font-size:20px"><span class="l" contenteditable>Content strategy</span><span contenteditable>Quarterly</span></div>
+        <div class="priceline" data-ed data-kind="row" style="font-size:20px"><span class="l" contenteditable>Feed posts</span><span contenteditable>12 / mo</span></div>
+        <div class="priceline" data-ed data-kind="row" style="font-size:20px"><span class="l" contenteditable>Reels</span><span contenteditable>8 / mo</span></div>
+        <div class="priceline" data-ed data-kind="row" style="font-size:20px"><span class="l" contenteditable>Stories</span><span contenteditable>30+ / mo</span></div>
+        <div class="priceline" data-ed data-kind="row" style="font-size:20px"><span class="l" contenteditable>Shoot day</span><span contenteditable>1 / mo</span></div>
+        <div class="priceline" data-ed data-kind="row" style="font-size:20px"><span class="l" contenteditable>Community replies</span><span contenteditable>Daily</span></div>
+      </div>
+    </div>
+    ${meta(n,'Scope')}`},
+
+  contact:{ name:'Sign off', build:(n)=>`
+    <div class="pad" style="padding:70px">
+      <div class="block" data-ed data-kind="box" style="background:${THEME.hot}; color:#000; flex:1; padding:52px; display:flex; flex-direction:column; justify-content:space-between">
+        <div class="huge" data-ed data-kind="text" contenteditable>Let's<br>go</div>
+        <div style="display:flex; gap:50px">
+          <div class="body" data-ed data-kind="text" contenteditable><b>Email</b><br>hello@studio.com</div>
+          <div class="body" data-ed data-kind="text" contenteditable><b>Phone</b><br>+91 98000 00000</div>
+          <div class="body" data-ed data-kind="text" contenteditable><b>Instagram</b><br>@yourstudio</div>
+        </div>
+      </div>
+    </div>
+    ${meta(n,'Next steps')}`}
+};
+
+/* ══════════ DECK ══════════ */
+const ORDER = ['cover','split','scope','statement','pricing','cards','timeline','contact'];
+let slides = [];      // DOM nodes
+let current = 0;
+let sel = null;
+
+function makeSlide(type){
+  const el = document.createElement('section');
+  el.className = 'slide';
+  el.dataset.type = type;
+  el.innerHTML = `<div class="sbg"></div><div class="stint"></div>` + LIB[type].build(slides.length+1);
+  el.style.background = type === 'pricing' ? THEME.paper : THEME.deep;
+  if(type === 'pricing') el.style.color = '#000';
+  return el;
+}
+function buildDeck(){
+  slides = ORDER.map(makeSlide);
+  renderStage(); renderStrip();
+}
+function renderStage(){
+  stage.innerHTML = '';
+  if(slides[current]) stage.appendChild(slides[current]);
+  fit();
+}
+function renumber(){
+  slides.forEach((s,i) => {
+    const m = s.querySelector('.meta');
+    if(!m) return;
+    const first = m.childNodes[0];
+    if(first && first.nodeType === 3 && /^Page\s/i.test(first.nodeValue))
+      first.nodeValue = 'Page ' + (i+1);
+  });
+}
+function renderStrip(){
+  renumber();
+  $('strip').innerHTML = slides.map((s,i)=>`
+    <div class="thumb ${i===current?'on':''}" data-i="${i}">
+      <div class="mini"></div>
+      <span class="idx">${String(i+1).padStart(2,'0')}</span>
+      <button class="kill" data-kill="${i}" title="Delete slide">✕</button>
+    </div>`).join('') + `<button class="addslide" id="addSlide">+ Slide</button>`;
+  [...$('strip').querySelectorAll('.thumb')].forEach((t,i)=>{
+    const clone = slides[i].cloneNode(true);
+    clone.querySelectorAll('[contenteditable]').forEach(e=>e.removeAttribute('contenteditable'));
+    t.querySelector('.mini').appendChild(clone);
+  });
+  $('addSlide').onclick = openAddMenu;
+}
+$('strip').addEventListener('click', e => {
+  const kill = e.target.closest('[data-kill]');
+  if(kill){
+    if(slides.length <= 1) return;
+    slides.splice(+kill.dataset.kill, 1);
+    current = Math.min(current, slides.length-1);
+    renderStage(); renderStrip(); return;
+  }
+  const t = e.target.closest('.thumb');
+  if(t){ current = +t.dataset.i; closeInsp(); renderStage(); renderStrip(); }
+});
+
+/* add-slide menu, floats over the strip */
+function openAddMenu(){
+  const box = $('insp');
+  sel = null;
+  $('inspTitle').textContent = 'Add slide';
+  $('inspBody').innerHTML = `<div class="grp"><label>Layout</label>
+    <div style="display:flex; flex-direction:column; gap:5px">
+      ${Object.entries(LIB).map(([k,v])=>`<button class="rbtn" data-new="${k}" style="text-align:left">${v.name}</button>`).join('')}
+    </div></div>`;
+  $('inspBody').querySelectorAll('[data-new]').forEach(b => b.onclick = () => {
+    slides.splice(current+1, 0, makeSlide(b.dataset.new));
+    current++; closeInsp(); renderStage(); renderStrip();
+  });
+  const r = $('addSlide').getBoundingClientRect();
+  box.classList.add('open');
+  box.style.left = Math.min(window.innerWidth-286, r.left) + 'px';
+  box.style.top  = Math.max(56, r.top - box.offsetHeight - 10) + 'px';
+}
+
+/* ══════════ FIT TO VIEWPORT ══════════ */
+function fit(){
+  const c = $('canvas').getBoundingClientRect();
+  const z = Math.min((c.width-70)/1280, (c.height-50)/720);
+  stage.style.transform = `scale(${z})`;
+}
+window.addEventListener('resize', () => { fit(); if(sel) placeInsp(); });
+
+/* ══════════ SELECTION + INSPECTOR ══════════ */
+const FONTS = {
+  'Archivo Black':'"Archivo Black", sans-serif',
+  'Archivo':'Archivo, sans-serif',
+  'Anton':'Anton, sans-serif',
+  'Space Grotesk':'"Space Grotesk", sans-serif',
+  'DM Mono':'"DM Mono", monospace',
+  'Instrument Serif':'"Instrument Serif", serif'
+};
+function closeInsp(){ $('insp').classList.remove('open'); if(sel) sel.classList.remove('sel'); sel = null; }
+$('inspClose').onclick = closeInsp;
+
+stage.addEventListener('mousedown', e => {
+  const el = e.target.closest('[data-ed]');
+  if(sel) sel.classList.remove('sel');
+  if(!el){ sel = slides[current]; sel.classList.add('sel'); buildInsp('slide'); placeInsp(e); return; }
+  sel = el; el.classList.add('sel');
+  buildInsp(el.dataset.kind || 'box');
+  placeInsp(e);
+});
+function placeInsp(e){
+  const box = $('insp');
+  box.classList.add('open');
+  const r = sel.getBoundingClientRect();
+  let x = (e ? e.clientX + 18 : r.right + 14);
+  let y = (e ? e.clientY - 20 : r.top);
+  x = Math.min(x, window.innerWidth - 280);
+  y = Math.min(Math.max(56, y), window.innerHeight - box.offsetHeight - 140);
+  box.style.left = x + 'px'; box.style.top = y + 'px';
+}
+const px = v => parseFloat(v) || 0;
+
+function buildInsp(kind){
+  const st = getComputedStyle(sel);
+  $('inspTitle').textContent = { text:'Text', box:'Block', row:'Line item', image:'Image', slide:'Slide' }[kind] || 'Block';
+  const parts = [];
+
+  if(kind === 'text' || kind === 'row'){
+    parts.push(`
+      <div class="grp"><label>Typeface</label>
+        <select data-a="font">${Object.keys(FONTS).map(f=>`<option>${f}</option>`).join('')}</select></div>
+      <div class="grp"><label>Size <span class="val" id="vSize">${Math.round(px(st.fontSize))}px</span></label>
+        <input type="range" min="8" max="180" value="${Math.round(px(st.fontSize))}" data-a="size"></div>
+      <div class="grp"><label>Tracking <span class="val" id="vTrack">${st.letterSpacing==='normal'?0:Math.round(px(st.letterSpacing))}px</span></label>
+        <input type="range" min="-8" max="12" value="${st.letterSpacing==='normal'?0:Math.round(px(st.letterSpacing))}" data-a="track"></div>
+      <div class="grp"><label>Weight</label>
+        <div class="seg">${[400,500,700,800,900].map(w=>`<button data-a="weight" data-v="${w}" class="${Math.round(px(st.fontWeight))==w?'on':''}">${w}</button>`).join('')}</div></div>
+      <div class="grp"><label>Align</label>
+        <div class="seg">${['left','center','right'].map(a=>`<button data-a="align" data-v="${a}" class="${st.textAlign===a?'on':''}">${a[0].toUpperCase()}</button>`).join('')}</div></div>
+      <div class="grp"><label>Case</label>
+        <div class="seg">${[['none','Aa'],['uppercase','AA'],['lowercase','aa']].map(([v,l])=>`<button data-a="case" data-v="${v}" class="${st.textTransform===v?'on':''}">${l}</button>`).join('')}</div></div>
+      <div class="grp"><label>Text colour</label>${swatchRow('color')}</div>`);
+  }
+  if(kind === 'box' || kind === 'row' || kind === 'slide'){
+    parts.push(`<div class="grp"><label>${kind==='slide'?'Slide colour':'Fill'}</label>${swatchRow('bg')}</div>`);
+  }
+  if(kind === 'box'){
+    parts.push(`
+      <div class="grp"><label>Corner <span class="val" id="vRad">${Math.round(px(st.borderRadius))}px</span></label>
+        <input type="range" min="0" max="99" value="${Math.round(px(st.borderRadius))}" data-a="radius"></div>
+      <div class="grp"><label>Ink</label>${swatchRow('color')}</div>`);
+  }
+  if(kind === 'image' || kind === 'slide'){
+    parts.push(`
+      <div class="grp"><label>Photo</label>
+        <div class="rowbtns">
+          <button data-a="pick">Upload</button>
+          <button data-a="dropimg" class="danger">Clear</button>
+        </div>
+        <input type="file" accept="image/*" data-a="file" hidden></div>
+      <div class="grp"><label>Overlay <span class="val" id="vTint">${Math.round((+(sel.dataset.tint||0))*100)}%</span></label>
+        <input type="range" min="0" max="90" value="${Math.round((+(sel.dataset.tint||0))*100)}" data-a="tint"></div>`);
+  }
+  if(kind !== 'slide'){
+    parts.push(`<div class="rowbtns">
+      <button data-a="dup">Duplicate</button>
+      <button data-a="del" class="danger">Delete</button>
+    </div>`);
+  }
+  $('inspBody').innerHTML = parts.join('');
+
+  const fontSel = $('inspBody').querySelector('[data-a="font"]');
+  if(fontSel){
+    const cur = Object.keys(FONTS).find(f => st.fontFamily.includes(f.split(' ')[0]));
+    if(cur) fontSel.value = cur;
+  }
+}
+function swatchRow(target){
+  return `<div class="swatches">
+    ${SWATCH().map(c=>`<button class="sw" data-a="${target}" data-v="${c}" style="background:${c}"></button>`).join('')}
+    <span class="sw pick" style="background:conic-gradient(red,yellow,lime,aqua,blue,magenta,red)">
+      <input type="color" data-a="${target}pick"></span>
+  </div>`;
+}
+
+/* inspector actions */
+$('inspBody').addEventListener('input', e => {
+  const a = e.target.dataset.a; if(!a || !sel) return;
+  const v = e.target.value;
+  if(a === 'size'){ sel.style.fontSize = v+'px'; $('vSize').textContent = v+'px'; }
+  if(a === 'track'){ sel.style.letterSpacing = v+'px'; $('vTrack').textContent = v+'px'; }
+  if(a === 'radius'){ sel.style.borderRadius = v+'px'; $('vRad').textContent = v+'px'; }
+  if(a === 'font'){ sel.style.fontFamily = FONTS[v]; }
+  if(a === 'colorpick'){ sel.style.color = v; }
+  if(a === 'bgpick'){ applyFill(v); }
+  if(a === 'tint'){
+    sel.dataset.tint = v/100;
+    $('vTint').textContent = v+'%';
+    applyImg(sel);
+  }
+  if(a === 'file'){
+    const f = e.target.files[0]; if(!f) return;
+    const r = new FileReader();
+    r.onload = ev => { sel.dataset.img = ev.target.result; applyImg(sel); refresh(); };
+    r.readAsDataURL(f);
+  }
+  refresh();
+});
+/* photo + overlay live on the same element, so the selection ring survives */
+function applyImg(el){
+  const a = +(el.dataset.tint || 0), img = el.dataset.img || '';
+  if(el.classList.contains('slide')){
+    el.querySelector('.sbg').style.backgroundImage = img ? `url('${img}')` : '';
+    el.querySelector('.stint').style.background = a ? `rgba(0,0,0,${a})` : '';
+    return;
+  }
+  const shade = a ? `linear-gradient(rgba(0,0,0,${a}), rgba(0,0,0,${a}))` : '';
+  el.style.backgroundImage = [shade, img ? `url('${img}')` : ''].filter(Boolean).join(', ');
+  el.style.backgroundSize = 'cover';
+  el.style.backgroundPosition = 'center';
+}
+function applyFill(v){
+  if(sel.classList.contains('slide')) sel.style.background = v;
+  else sel.style.background = v;
+}
+$('inspBody').addEventListener('click', e => {
+  const b = e.target.closest('button[data-a]'); if(!b || !sel) return;
+  const a = b.dataset.a, v = b.dataset.v;
+  const seg = b.closest('.seg');
+  if(seg) seg.querySelectorAll('button').forEach(x => x.classList.toggle('on', x===b));
+  if(a === 'weight') sel.style.fontWeight = v;
+  if(a === 'align') sel.style.textAlign = v;
+  if(a === 'case') sel.style.textTransform = v;
+  if(a === 'color') sel.style.color = v;
+  if(a === 'bg') applyFill(v);
+  if(a === 'pick') $('inspBody').querySelector('[data-a="file"]').click();
+  if(a === 'dropimg'){ delete sel.dataset.img; applyImg(sel); }
+  if(a === 'dup'){
+    const copy = sel.cloneNode(true);
+    copy.classList.remove('sel');
+    sel.after(copy);
+  }
+  if(a === 'del'){
+    const gone = sel; closeInsp(); gone.remove();
+  }
+  refresh();
+});
+
+/* drag the inspector by its header */
+(function(){
+  let drag = null;
+  $('inspHead').addEventListener('mousedown', e => {
+    if(e.target.tagName === 'BUTTON') return;
+    const r = $('insp').getBoundingClientRect();
+    drag = { dx:e.clientX - r.left, dy:e.clientY - r.top };
+    e.preventDefault();
+  });
+  window.addEventListener('mousemove', e => {
+    if(!drag) return;
+    $('insp').style.left = Math.min(window.innerWidth-280, Math.max(0, e.clientX-drag.dx)) + 'px';
+    $('insp').style.top  = Math.min(window.innerHeight-80, Math.max(48, e.clientY-drag.dy)) + 'px';
+  });
+  window.addEventListener('mouseup', () => drag = null);
+})();
+
+/* paste as plain text so the deck keeps its type system */
+stage.addEventListener('paste', e => {
+  if(!e.target.closest('[contenteditable]')) return;
+  e.preventDefault();
+  document.execCommand('insertText', false, (e.clipboardData||window.clipboardData).getData('text'));
+});
+stage.addEventListener('input', () => clearTimeout(window._t) || (window._t = setTimeout(renderStrip, 500)));
+function refresh(){ clearTimeout(window._r); window._r = setTimeout(renderStrip, 250); }
+
+/* ══════════ THEME SHEET ══════════ */
+$('themeBtn').onclick = () => {
+  sel = null;
+  $('inspTitle').textContent = 'Deck theme';
+  $('inspBody').innerHTML = Object.entries(THEME).map(([k,v])=>`
+    <div class="grp"><label>${k}</label>
+      <input type="color" value="${v}" data-theme="${k}" style="width:100%; height:26px; border:1px solid var(--ui-line); background:none; cursor:pointer"></div>`).join('')
+    + `<div class="hintline" style="font-size:10px; color:var(--ui-dim); line-height:1.5">Changing a theme colour recolours every block still using the old value.</div>`;
+  $('inspBody').querySelectorAll('[data-theme]').forEach(inp => inp.oninput = e => {
+    const k = e.target.dataset.theme, oldV = THEME[k], newV = e.target.value;
+    const hexToRgb = h => { const n = parseInt(h.slice(1),16); return `rgb(${n>>16}, ${(n>>8)&255}, ${n&255})`; };
+    const oldRgb = hexToRgb(oldV);
+    slides.forEach(s => s.querySelectorAll('*').forEach(el => {
+      if(el.style.background && (el.style.background.toLowerCase() === oldV.toLowerCase())) el.style.background = newV;
+      if(el.style.color && el.style.color.toLowerCase() === oldV.toLowerCase()) el.style.color = newV;
+      const cs = getComputedStyle(el);
+      if(cs.backgroundColor === oldRgb) el.style.background = newV;
+    }));
+    slides.forEach(s => { if(getComputedStyle(s).backgroundColor === oldRgb) s.style.background = newV; });
+    THEME[k] = newV; refresh();
+  });
+  const r = $('themeBtn').getBoundingClientRect();
+  $('insp').classList.add('open');
+  $('insp').style.left = Math.min(window.innerWidth-286, r.left-100)+'px';
+  $('insp').style.top = (r.bottom+8)+'px';
+};
+
+/* ══════════ EXPORT ══════════ */
+$('pdfBtn').onclick = () => {
+  closeInsp();
+  const keep = stage.innerHTML;
+  stage.innerHTML = '';
+  slides.forEach(s => stage.appendChild(s));
+  window.print();
+  setTimeout(()=>{ stage.innerHTML = ''; renderStage(); }, 400);
+};
+$('saveBtn').onclick = () => {
+  const data = { theme:THEME, current, slides: slides.map(s => ({
+    type:s.dataset.type, style:s.getAttribute('style')||'',
+    img:s.dataset.img||'', tint:s.dataset.tint||'', html:s.innerHTML })) };
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(data)], {type:'application/json'}));
+  a.download = 'deck.json'; a.click();
+};
+$('openBtn').onclick = () => $('openFile').click();
+$('openFile').onchange = e => {
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    try{
+      const d = JSON.parse(ev.target.result);
+      Object.assign(THEME, d.theme||{});
+      slides = (d.slides||[]).map(sd => {
+        const el = document.createElement('section');
+        el.className = 'slide'; el.dataset.type = sd.type;
+        el.setAttribute('style', sd.style); el.innerHTML = sd.html;
+        if(sd.img) el.dataset.img = sd.img;
+        if(sd.tint) el.dataset.tint = sd.tint;
+        if(sd.img || sd.tint) applyImg(el);
+        return el;
+      });
+      current = Math.min(d.current||0, slides.length-1);
+      closeInsp(); renderStage(); renderStrip();
+    }catch(err){ alert("That file isn't a saved deck."); }
+  };
+  r.readAsText(f);
+};
+
+/* keyboard */
+window.addEventListener('keydown', e => {
+  if(document.activeElement && document.activeElement.isContentEditable) return;
+  if(e.key === 'ArrowRight' && current < slides.length-1){ current++; closeInsp(); renderStage(); renderStrip(); }
+  if(e.key === 'ArrowLeft' && current > 0){ current--; closeInsp(); renderStage(); renderStrip(); }
+  if(e.key === 'Escape') closeInsp();
+});
+
+buildDeck();
+</script>
+</body>
+</html>

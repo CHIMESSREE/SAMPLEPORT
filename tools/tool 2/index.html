@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@100;200;300;400;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Josefin Sans',sans-serif;background:#f4efe8;color:#2f2a24;display:flex;flex-direction:column}
+
+:root{
+  --bg:#f4efe8;--surface:#fbf8f2;--card:#ffffff;--border:rgba(255,255,255,0.07);
+  --cream:#2f2a24;--muted:rgba(232,228,220,0.38);--muted2:rgba(232,228,220,0.6);
+  --reel:#e8607a;--feed:#6fa8dc;--story:#72c48a;--carousel:#e8a84a;
+  --tarot:#b07ab8;--smm:#7c9cbc;--photo:#c9965a;
+  --accent:#9b6dbd;
+}
+
+/* ── LAYOUT ── */
+.app{display:flex;height:100%;overflow:hidden}
+.sidebar{width:220px;min-width:220px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+/* ── SIDEBAR ── */
+.sb-logo{padding:22px 18px 16px;border-bottom:1px solid var(--border)}
+.sb-logo h1{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--cream);line-height:1}
+.sb-logo h1 em{font-style:italic;color:rgba(155,109,189,0.8)}
+.sb-logo p{font-size:7px;letter-spacing:.4em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+
+.sb-section{padding:10px 12px 6px;font-size:7px;letter-spacing:.4em;text-transform:uppercase;color:var(--muted)}
+.sb-calendars{flex:1;overflow-y:auto;padding:4px 8px}
+.sb-calendars::-webkit-scrollbar{width:3px}
+.sb-calendars::-webkit-scrollbar-track{background:transparent}
+.sb-calendars::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
+
+.cal-item{
+  display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:4px;
+  cursor:pointer;transition:background .2s;margin-bottom:2px;position:relative;
+}
+.cal-item:hover{background:rgba(255,255,255,.04)}
+.cal-item.active{background:rgba(155,109,189,.12);border:1px solid rgba(155,109,189,.2)}
+.cal-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.cal-name{font-size:10px;letter-spacing:.05em;color:var(--cream);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cal-del{opacity:0;font-size:10px;color:var(--muted);cursor:pointer;transition:opacity .2s;padding:2px 4px}
+.cal-item:hover .cal-del{opacity:1}
+.cal-del:hover{color:#e8607a}
+
+.add-cal{
+  margin:8px;padding:10px;border:1px dashed rgba(255,255,255,.1);border-radius:4px;
+  background:transparent;color:var(--muted);font-family:'Josefin Sans',sans-serif;
+  font-size:8px;letter-spacing:.3em;text-transform:uppercase;cursor:pointer;
+  transition:all .2s;width:calc(100% - 16px);
+}
+.add-cal:hover{border-color:rgba(155,109,189,.4);color:var(--accent);background:rgba(155,109,189,.05)}
+
+.sb-legend{padding:12px;border-top:1px solid var(--border)}
+.leg-title{font-size:7px;letter-spacing:.4em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.leg-row{display:flex;align-items:center;gap:7px;margin-bottom:5px;font-size:8px;letter-spacing:.1em;color:var(--muted2)}
+.leg-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+
+/* ── TOPBAR ── */
+.topbar{
+  display:flex;align-items:center;gap:12px;padding:12px 20px;
+  border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;
+}
+.cal-title-edit{
+  font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;
+  color:var(--cream);background:transparent;border:none;outline:none;
+  border-bottom:1px solid transparent;transition:border-color .2s;flex:1;
+}
+.cal-title-edit:hover,.cal-title-edit:focus{border-bottom-color:rgba(255,255,255,.2)}
+.nav-month{display:flex;align-items:center;gap:6px}
+.nav-btn{
+  width:28px;height:28px;background:rgba(255,255,255,.04);border:1px solid var(--border);
+  border-radius:4px;color:var(--cream);cursor:pointer;display:flex;align-items:center;
+  justify-content:center;font-size:12px;transition:all .2s;
+}
+.nav-btn:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15)}
+.month-label{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--cream);min-width:120px;text-align:center}
+.year-input{
+  width:54px;background:rgba(255,255,255,.04);border:1px solid var(--border);
+  border-radius:4px;color:var(--cream);font-family:'Josefin Sans',sans-serif;
+  font-size:11px;letter-spacing:.1em;text-align:center;padding:4px 6px;outline:none;
+}
+.year-input:focus{border-color:rgba(155,109,189,.5)}
+.view-toggle{display:flex;gap:2px;margin-left:auto}
+.vt-btn{
+  padding:5px 10px;font-size:7px;letter-spacing:.3em;text-transform:uppercase;
+  background:transparent;border:1px solid var(--border);color:var(--muted);
+  cursor:pointer;transition:all .2s;
+}
+.vt-btn:first-child{border-radius:4px 0 0 4px}
+.vt-btn:last-child{border-radius:0 4px 4px 0}
+.vt-btn.on{background:rgba(155,109,189,.15);border-color:rgba(155,109,189,.3);color:var(--cream)}
+
+/* ── CALENDAR GRID ── */
+.cal-wrap{flex:1;overflow-y:auto;padding:16px 20px 20px}
+.cal-wrap::-webkit-scrollbar{width:4px}
+.cal-wrap::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:2px}
+
+.cal-head{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px}
+.cal-head-day{text-align:center;font-size:7px;letter-spacing:.4em;text-transform:uppercase;color:var(--muted);padding:4px 0}
+
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-cell{
+  min-height:100px;background:var(--card);border:1px solid var(--border);
+  border-radius:4px;padding:6px;cursor:pointer;transition:border-color .2s;
+  position:relative;overflow:hidden;
+}
+.cal-cell:hover{border-color:rgba(155,109,189,.3)}
+.cal-cell.today{border-color:rgba(155,109,189,.5);background:rgba(155,109,189,.06)}
+.cal-cell.other-month{opacity:.35}
+.cell-date{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;color:var(--cream);line-height:1;margin-bottom:4px}
+.cell-date.today-num{color:var(--accent)}
+
+.post-chip{
+  display:flex;align-items:center;gap:4px;padding:3px 5px;border-radius:2px;
+  margin-bottom:2px;cursor:pointer;transition:opacity .2s;font-size:8px;
+  letter-spacing:.05em;overflow:hidden;
+}
+.post-chip:hover{opacity:.75}
+.chip-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.chip-text{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;color:var(--cream)}
+.chip-page{font-size:6px;letter-spacing:.2em;margin-left:auto;opacity:.6;flex-shrink:0}
+.more-chips{font-size:7px;color:var(--muted);letter-spacing:.1em;padding:2px 4px}
+
+/* ── WEEK VIEW ── */
+.week-view{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;height:100%;overflow:hidden}
+.wv-col{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.wv-head{padding:10px 8px;border-bottom:1px solid var(--border);text-align:center;flex-shrink:0}
+.wv-day-name{font-size:7px;letter-spacing:.4em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.wv-day-num{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--cream);line-height:1}
+.wv-day-num.today-wv{color:var(--accent)}
+.wv-body{flex:1;overflow-y:auto;padding:6px;cursor:pointer}
+.wv-body::-webkit-scrollbar{width:2px}
+.wv-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08)}
+.wv-post{padding:6px 7px;border-radius:3px;margin-bottom:5px;border-left:2px solid;cursor:pointer}
+.wv-post:hover{opacity:.8}
+.wv-post-title{font-family:'Cormorant Garamond',serif;font-size:11px;color:var(--cream);line-height:1.2;margin-bottom:3px}
+.wv-post-meta{font-size:6px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);display:flex;gap:6px;flex-wrap:wrap}
+.wv-add{width:100%;padding:5px;background:transparent;border:1px dashed rgba(255,255,255,.08);border-radius:3px;color:var(--muted);font-size:8px;letter-spacing:.2em;cursor:pointer;transition:all .2s;margin-top:4px}
+.wv-add:hover{border-color:rgba(155,109,189,.3);color:var(--accent)}
+
+/* ── MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;
+  display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(4px);
+  animation:fadein .2s ease;
+}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.modal{
+  background:var(--surface);border:1px solid rgba(255,255,255,.1);
+  border-radius:8px;width:min(640px,95vw);max-height:90vh;overflow-y:auto;
+  animation:slideup .25s ease;box-shadow:0 24px 80px rgba(0,0,0,.6);
+}
+@keyframes slideup{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal::-webkit-scrollbar{width:4px}
+.modal::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08)}
+.modal-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 24px 16px;border-bottom:1px solid var(--border);
+}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--cream)}
+.modal-close{
+  width:28px;height:28px;background:rgba(255,255,255,.06);border:1px solid var(--border);
+  border-radius:4px;color:var(--cream);cursor:pointer;font-size:14px;display:flex;
+  align-items:center;justify-content:center;
+}
+.modal-close:hover{background:rgba(232,96,122,.1);border-color:var(--reel);color:var(--reel)}
+.modal-body{padding:20px 24px 24px;display:flex;flex-direction:column;gap:14px}
+
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group.full{grid-column:1/-1}
+.form-label{font-size:7px;letter-spacing:.4em;text-transform:uppercase;color:var(--muted)}
+.form-input,.form-select,.form-textarea{
+  background:var(--card);border:1px solid var(--border);border-radius:4px;
+  color:var(--cream);font-family:'Josefin Sans',sans-serif;font-size:11px;
+  padding:8px 10px;outline:none;transition:border-color .2s;letter-spacing:.04em;
+}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:rgba(155,109,189,.5)}
+.form-select{cursor:pointer}
+.form-select option{background:#1a1726}
+.form-textarea{resize:vertical;min-height:70px;line-height:1.6}
+
+/* type selector */
+.type-selector{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.type-btn{
+  padding:7px 6px;border:1px solid var(--border);border-radius:4px;
+  background:transparent;color:var(--muted);font-family:'Josefin Sans',sans-serif;
+  font-size:7px;letter-spacing:.3em;text-transform:uppercase;cursor:pointer;
+  transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:4px;
+}
+.type-btn .tb-dot{width:8px;height:8px;border-radius:50%}
+.type-btn.selected-reel{background:rgba(232,96,122,.1);border-color:var(--reel);color:var(--reel)}
+.type-btn.selected-feed{background:rgba(111,168,220,.1);border-color:var(--feed);color:var(--feed)}
+.type-btn.selected-story{background:rgba(114,196,138,.1);border-color:var(--story);color:var(--story)}
+.type-btn.selected-carousel{background:rgba(232,168,74,.1);border-color:var(--carousel);color:var(--carousel)}
+
+/* sticker pack */
+.sticker-row{display:flex;gap:8px;flex-wrap:wrap}
+.sticker-btn{
+  padding:6px 10px;border-radius:20px;border:1px solid var(--border);
+  background:transparent;cursor:pointer;font-size:11px;transition:all .2s;
+  display:flex;align-items:center;gap:5px;
+}
+.sticker-btn:hover{background:rgba(255,255,255,.04);transform:scale(1.05)}
+.sticker-btn.selected{border-color:rgba(155,109,189,.5);background:rgba(155,109,189,.08)}
+.sticker-label{font-size:7px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+
+/* page selector */
+.page-selector{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.page-btn{
+  padding:7px;border:1px solid var(--border);border-radius:4px;
+  background:transparent;color:var(--muted);font-family:'Josefin Sans',sans-serif;
+  font-size:7px;letter-spacing:.3em;text-transform:uppercase;cursor:pointer;
+  transition:all .2s;
+}
+.page-btn.selected-tarot{background:rgba(176,122,184,.1);border-color:var(--tarot);color:var(--tarot)}
+.page-btn.selected-smm{background:rgba(124,156,188,.1);border-color:var(--smm);color:var(--smm)}
+.page-btn.selected-photo{background:rgba(201,150,90,.1);border-color:var(--photo);color:var(--photo)}
+
+/* links */
+.link-row{display:flex;gap:6px;align-items:center}
+.link-input{flex:1}
+.add-link-btn{
+  padding:8px 12px;background:rgba(155,109,189,.1);border:1px solid rgba(155,109,189,.25);
+  border-radius:4px;color:var(--accent);font-family:'Josefin Sans',sans-serif;
+  font-size:8px;letter-spacing:.2em;cursor:pointer;white-space:nowrap;
+}
+.link-list{display:flex;flex-direction:column;gap:4px;margin-top:4px}
+.link-item{
+  display:flex;align-items:center;gap:6px;padding:5px 8px;
+  background:var(--card);border:1px solid var(--border);border-radius:3px;
+}
+.link-item a{font-size:9px;color:var(--feed);letter-spacing:.05em;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-decoration:none}
+.link-item a:hover{text-decoration:underline}
+.link-remove{color:var(--muted);cursor:pointer;font-size:10px;flex-shrink:0}
+.link-remove:hover{color:var(--reel)}
+
+/* modal footer */
+.modal-footer{
+  display:flex;gap:8px;justify-content:flex-end;padding:14px 24px;
+  border-top:1px solid var(--border);
+}
+.btn-secondary{
+  padding:8px 16px;background:transparent;border:1px solid var(--border);
+  border-radius:4px;color:var(--muted);font-family:'Josefin Sans',sans-serif;
+  font-size:8px;letter-spacing:.3em;text-transform:uppercase;cursor:pointer;
+}
+.btn-secondary:hover{background:rgba(255,255,255,.04);color:var(--cream)}
+.btn-primary{
+  padding:8px 20px;background:rgba(155,109,189,.15);border:1px solid rgba(155,109,189,.35);
+  border-radius:4px;color:var(--cream);font-family:'Josefin Sans',sans-serif;
+  font-size:8px;letter-spacing:.3em;text-transform:uppercase;cursor:pointer;
+  transition:all .2s;
+}
+.btn-primary:hover{background:rgba(155,109,189,.25);border-color:rgba(155,109,189,.5)}
+.btn-danger{
+  padding:8px 16px;background:rgba(232,96,122,.08);border:1px solid rgba(232,96,122,.2);
+  border-radius:4px;color:var(--reel);font-family:'Josefin Sans',sans-serif;
+  font-size:8px;letter-spacing:.3em;text-transform:uppercase;cursor:pointer;
+  margin-right:auto;
+}
+.btn-danger:hover{background:rgba(232,96,122,.15)}
+
+/* new cal modal */
+.color-picker{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.cp-swatch{width:24px;height:24px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform .2s}
+.cp-swatch:hover{transform:scale(1.15)}
+.cp-swatch.selected{border-color:#fff}
+
+/* detail view */
+.detail-modal .modal-body{gap:12px}
+.detail-field{padding:10px 12px;background:var(--card);border:1px solid var(--border);border-radius:4px}
+.detail-label{font-size:6px;letter-spacing:.4em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.detail-value{font-size:11px;color:var(--cream);line-height:1.6;letter-spacing:.04em}
+.detail-value a{color:var(--feed);text-decoration:none}
+.detail-value a:hover{text-decoration:underline}
+.type-badge{
+  display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:2px;
+  font-size:7px;letter-spacing:.3em;text-transform:uppercase;
+}
+.page-badge{
+  display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:2px;
+  font-size:7px;letter-spacing:.3em;text-transform:uppercase;
+}
+.stickers-display{display:flex;gap:6px;flex-wrap:wrap;font-size:18px}
+
+/* empty state */
+.empty-cell{display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.05);font-size:18px}
+
+/* scrollbar global */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:2px}
+
+@media(max-width:700px){
+  .sidebar{width:180px;min-width:180px}
+  .cal-cell{min-height:70px}
+  .form-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <h1>Content<br><em>Planner</em></h1>
+      <p>Instagram · 3 Pages</p>
+    </div>
+    <div class="sb-section">Calendars</div>
+    <div class="sb-calendars" id="calList"></div>
+    <button class="add-cal" onclick="openNewCal()">+ New Calendar</button>
+    <div class="sb-legend">
+      <div class="leg-title">Post Types</div>
+      <div class="leg-row"><div class="leg-dot" style="background:var(--reel)"></div>Reel</div>
+      <div class="leg-row"><div class="leg-dot" style="background:var(--feed)"></div>Feed Post</div>
+      <div class="leg-row"><div class="leg-dot" style="background:var(--story)"></div>Story</div>
+      <div class="leg-row"><div class="leg-dot" style="background:var(--carousel)"></div>Carousel</div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <div class="main">
+    <div class="topbar">
+      <input class="cal-title-edit" id="calTitleInput" value="" onchange="saveCalTitle()" />
+      <div class="nav-month">
+        <button class="nav-btn" onclick="changeMonth(-1)">‹</button>
+        <div class="month-label" id="monthLabel">June 2026</div>
+        <button class="nav-btn" onclick="changeMonth(1)">›</button>
+      </div>
+      <input class="year-input" id="yearInput" type="number" value="2026" onchange="changeYear()" />
+      <div class="view-toggle">
+        <button class="vt-btn on" id="vbMonth" onclick="setView('month')">Month</button>
+        <button class="vt-btn" id="vbWeek" onclick="setView('week')">Week</button>
+      </div>
+    </div>
+    <div class="cal-wrap" id="calWrap"></div>
+  </div>
+</div>
+
+<!-- MODAL: New/Edit Post -->
+<div class="modal-overlay" id="postModal" style="display:none" onclick="closePostModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div class="modal-title" id="postModalTitle">New Post</div>
+      <button class="modal-close" onclick="closePostModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <!-- Title -->
+      <div class="form-group full">
+        <div class="form-label">Post Title</div>
+        <input class="form-input" id="f-title" placeholder="What are you posting?"/>
+      </div>
+      <!-- Date + Time row -->
+      <div class="form-row">
+        <div class="form-group">
+          <div class="form-label">Date</div>
+          <input class="form-input" id="f-date" type="date"/>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Posting Time</div>
+          <input class="form-input" id="f-time" type="time" value="09:00"/>
+        </div>
+      </div>
+      <!-- Type -->
+      <div class="form-group full">
+        <div class="form-label">Post Type</div>
+        <div class="type-selector">
+          <button class="type-btn" id="tb-reel" onclick="selectType('reel')">
+            <span class="tb-dot" style="background:var(--reel)"></span>Reel
+          </button>
+          <button class="type-btn" id="tb-feed" onclick="selectType('feed')">
+            <span class="tb-dot" style="background:var(--feed)"></span>Feed
+          </button>
+          <button class="type-btn" id="tb-story" onclick="selectType('story')">
+            <span class="tb-dot" style="background:var(--story)"></span>Story
+          </button>
+          <button class="type-btn" id="tb-carousel" onclick="selectType('carousel')">
+            <span class="tb-dot" style="background:var(--carousel)"></span>Carousel
+          </button>
+        </div>
+      </div>
+      <!-- Page -->
+      <div class="form-group full">
+        <div class="form-label">Instagram Page</div>
+        <div class="page-selector">
+          <button class="page-btn" id="pb-tarot" onclick="selectPage('tarot')">🔮 Tarot</button>
+          <button class="page-btn" id="pb-smm" onclick="selectPage('smm')">📢 SMM</button>
+          <button class="page-btn" id="pb-photo" onclick="selectPage('photo')">📷 Photo</button>
+        </div>
+      </div>
+      <!-- Sticker Pack -->
+      <div class="form-group full">
+        <div class="form-label">Stickers</div>
+        <div class="sticker-row" id="stickerPack"></div>
+      </div>
+      <!-- Caption -->
+      <div class="form-group full">
+        <div class="form-label">Caption / Notes</div>
+        <textarea class="form-textarea" id="f-caption" placeholder="Write your caption or post notes here..."></textarea>
+      </div>
+      <!-- Media Links -->
+      <div class="form-group full">
+        <div class="form-label">Media Links</div>
+        <div class="link-row">
+          <input class="form-input link-input" id="f-link-input" placeholder="https://drive.google.com/..." />
+          <button class="add-link-btn" onclick="addLink()">+ Add Link</button>
+        </div>
+        <div class="link-list" id="f-links"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-danger" id="deleteBtn" onclick="deletePost()" style="display:none">Delete</button>
+      <button class="btn-secondary" onclick="closePostModal()">Cancel</button>
+      <button class="btn-primary" onclick="savePost()">Save Post</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: New Calendar -->
+<div class="modal-overlay" id="newCalModal" style="display:none" onclick="closeNewCal(event)">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:380px">
+    <div class="modal-head">
+      <div class="modal-title">New Calendar</div>
+      <button class="modal-close" onclick="closeNewCal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="form-label">Calendar Name</div>
+        <input class="form-input" id="nc-name" placeholder="e.g. June 2026 Plan"/>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Colour</div>
+        <div class="color-picker" id="colorPicker"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeNewCal()">Cancel</button>
+      <button class="btn-primary" onclick="createCalendar()">Create</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────
+const CAL_COLORS = ['#9b6dbd','#7c9cbc','#c9965a','#b07ab8','#72c48a','#e8607a','#6db87a','#c9a050','#e8a84a'];
+
+const STICKERS = {
+  tarot: ['🔮','✦','🌙','🌟','⭐','🃏','🌀','💜','🕯️','🌙✨'],
+  smm:   ['📢','📈','💡','📱','🎯','✅','🔥','💬','📊','⚡'],
+  photo: ['📷','🎞️','🌅','🖼️','✨','📸','🎬','🌿','💫','🎨']
+};
+
+let state = {
+  calendars: [],
+  activeCal: null,
+  currentMonth: new Date().getMonth(),
+  currentYear: new Date().getFullYear(),
+  view: 'month',
+  editingPost: null,
+  selectedType: null,
+  selectedPage: null,
+  tempLinks: []
+};
+
+function save() {
+  try { localStorage.setItem('cp_state', JSON.stringify(state)) } catch(e) {}
+}
+function load() {
+  try {
+    const d = localStorage.getItem('cp_state');
+    if (d) { const s = JSON.parse(d); Object.assign(state, s); }
+  } catch(e) {}
+  if (!state.calendars || state.calendars.length === 0) seedDefault();
+}
+function seedDefault() {
+  const id = uid();
+  state.calendars = [{
+    id, name:'', color:'#9b6dbd', posts:[]
+  }];
+  state.activeCal = id;
+}
+function uid() { return Math.random().toString(36).slice(2,10); }
+function getActiveCal() { return state.calendars.find(c=>c.id===state.activeCal) || state.calendars[0]; }
+
+// ── SIDEBAR ─────────────────────────────────────────
+function renderSidebar() {
+  const list = document.getElementById('calList');
+  list.innerHTML = '';
+  state.calendars.forEach(cal => {
+    const d = document.createElement('div');
+    d.className = 'cal-item' + (cal.id === state.activeCal ? ' active' : '');
+    d.innerHTML = `<div class="cal-dot" style="background:${cal.color}"></div>
+      <div class="cal-name">${cal.name}</div>
+      <span class="cal-del" onclick="deleteCalendar('${cal.id}',event)" title="Delete">✕</span>`;
+    d.onclick = () => switchCal(cal.id);
+    list.appendChild(d);
+  });
+  const cal = getActiveCal();
+  if (cal) {
+    document.getElementById('calTitleInput').value = cal.name;
+  }
+}
+function switchCal(id) {
+  state.activeCal = id;
+  save();
+  renderSidebar();
+  renderCalendar();
+}
+function saveCalTitle() {
+  const cal = getActiveCal();
+  if (cal) { cal.name = document.getElementById('calTitleInput').value; save(); renderSidebar(); }
+}
+function deleteCalendar(id, e) {
+  e.stopPropagation();
+  if (state.calendars.length <= 1) { alert('Keep at least one calendar.'); return; }
+  if (!confirm('Delete this calendar and all its posts?')) return;
+  state.calendars = state.calendars.filter(c=>c.id!==id);
+  if (state.activeCal === id) state.activeCal = state.calendars[0].id;
+  save(); renderSidebar(); renderCalendar();
+}
+
+// ── NEW CALENDAR ─────────────────────────────────────
+function openNewCal() {
+  document.getElementById('nc-name').value = '';
+  const cp = document.getElementById('colorPicker');
+  cp.innerHTML = '';
+  CAL_COLORS.forEach((c,i) => {
+    const s = document.createElement('div');
+    s.className = 'cp-swatch' + (i===0?' selected':'');
+    s.style.background = c;
+    s.dataset.color = c;
+    s.onclick = () => { document.querySelectorAll('.cp-swatch').forEach(x=>x.classList.remove('selected')); s.classList.add('selected'); };
+    cp.appendChild(s);
+  });
+  document.getElementById('newCalModal').style.display = 'flex';
+}
+function closeNewCal(e) {
+  if (!e || e.target === document.getElementById('newCalModal')) document.getElementById('newCalModal').style.display = 'none';
+}
+function createCalendar() {
+  const name = document.getElementById('nc-name').value.trim() || 'New Calendar';
+  const sel = document.querySelector('.cp-swatch.selected');
+  const color = sel ? sel.dataset.color : CAL_COLORS[0];
+  if (state.calendars.length >= 6) { alert('Max 6 calendars reached. Delete one first.'); return; }
+  const id = uid();
+  state.calendars.push({ id, name, color, posts: [] });
+  state.activeCal = id;
+  save(); renderSidebar(); renderCalendar();
+  document.getElementById('newCalModal').style.display = 'none';
+}
+
+// ── CALENDAR RENDER ──────────────────────────────────
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+function changeMonth(d) {
+  state.currentMonth += d;
+  if (state.currentMonth > 11) { state.currentMonth = 0; state.currentYear++; }
+  if (state.currentMonth < 0)  { state.currentMonth = 11; state.currentYear--; }
+  document.getElementById('yearInput').value = state.currentYear;
+  updateMonthLabel();
+  renderCalendar();
+}
+function changeYear() {
+  const y = parseInt(document.getElementById('yearInput').value);
+  if (y >= 2020 && y <= 2035) { state.currentYear = y; updateMonthLabel(); renderCalendar(); }
+}
+function updateMonthLabel() {
+  document.getElementById('monthLabel').textContent = MONTHS[state.currentMonth] + ' ' + state.currentYear;
+}
+function setView(v) {
+  state.view = v;
+  document.getElementById('vbMonth').classList.toggle('on', v==='month');
+  document.getElementById('vbWeek').classList.toggle('on', v==='week');
+  renderCalendar();
+}
+
+function getTypeColor(t) {
+  return {reel:'var(--reel)',feed:'var(--feed)',story:'var(--story)',carousel:'var(--carousel)'}[t] || 'var(--muted)';
+}
+function getPageColor(p) {
+  return {tarot:'var(--tarot)',smm:'var(--smm)',photo:'var(--photo)'}[p] || 'var(--muted)';
+}
+function getPageLabel(p) {
+  return {tarot:'🔮',smm:'📢',photo:'📷'}[p] || '';
+}
+
+function renderCalendar() {
+  const wrap = document.getElementById('calWrap');
+  wrap.innerHTML = '';
+  updateMonthLabel();
+  state.view === 'week' ? renderWeek(wrap) : renderMonth(wrap);
+}
+
+function renderMonth(wrap) {
+  const head = document.createElement('div');
+  head.className = 'cal-head';
+  DAYS.forEach(d => { const h = document.createElement('div'); h.className='cal-head-day'; h.textContent=d; head.appendChild(h); });
+  wrap.appendChild(head);
+
+  const grid = document.createElement('div');
+  grid.className = 'cal-grid';
+  const first = new Date(state.currentYear, state.currentMonth, 1).getDay();
+  const daysInMonth = new Date(state.currentYear, state.currentMonth+1, 0).getDate();
+  const daysInPrev = new Date(state.currentYear, state.currentMonth, 0).getDate();
+  const total = Math.ceil((first + daysInMonth) / 7) * 7;
+  const today = new Date();
+  const cal = getActiveCal();
+
+  for (let i = 0; i < total; i++) {
+    let day, month, year, other = false;
+    if (i < first) { day = daysInPrev - first + i + 1; month = state.currentMonth - 1; year = state.currentYear; other = true; }
+    else if (i >= first + daysInMonth) { day = i - first - daysInMonth + 1; month = state.currentMonth + 1; year = state.currentYear; other = true; }
+    else { day = i - first + 1; month = state.currentMonth; year = state.currentYear; }
+    const d = new Date(year, month, day);
+    const isToday = d.toDateString() === today.toDateString();
+    const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const posts = (cal?.posts||[]).filter(p=>p.date===dateStr);
+
+    const cell = document.createElement('div');
+    cell.className = 'cal-cell' + (isToday?' today':'') + (other?' other-month':'');
+    cell.onclick = () => openPostModal(dateStr);
+
+    const dn = document.createElement('div');
+    dn.className = 'cell-date' + (isToday?' today-num':'');
+    dn.textContent = day;
+    cell.appendChild(dn);
+
+    const show = posts.slice(0,3);
+    show.forEach(p => {
+      const chip = document.createElement('div');
+      chip.className = 'post-chip';
+      chip.style.background = getTypeColor(p.type).replace('var(--','').replace(')','');
+      chip.style.background = `${getTypeColor(p.type).includes('var') ? '' : ''}rgba(0,0,0,0)`;
+      const tc = getTypeColor(p.type);
+      chip.style.cssText += `background:${tc}22;border-left:2px solid ${tc};`;
+      chip.innerHTML = `<span class="chip-dot" style="background:${tc}"></span><span class="chip-text">${p.title||'Untitled'}</span><span class="chip-page">${getPageLabel(p.page)}</span>`;
+      chip.onclick = e => { e.stopPropagation(); viewPost(p.id); };
+      cell.appendChild(chip);
+    });
+    if (posts.length > 3) {
+      const m = document.createElement('div');
+      m.className = 'more-chips';
+      m.textContent = `+${posts.length - 3} more`;
+      cell.appendChild(m);
+    }
+    grid.appendChild(cell);
+  }
+  wrap.appendChild(grid);
+}
+
+function renderWeek(wrap) {
+  const today = new Date();
+  const curr = new Date(state.currentYear, state.currentMonth, 1);
+  const startOfWeek = new Date(curr);
+  startOfWeek.setDate(curr.getDate() - curr.getDay());
+  const cal = getActiveCal();
+
+  const grid = document.createElement('div');
+  grid.className = 'week-view';
+  grid.style.padding = '4px';
+
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(startOfWeek);
+    d.setDate(startOfWeek.getDate() + i);
+    const dateStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const posts = (cal?.posts||[]).filter(p=>p.date===dateStr);
+    const isToday = d.toDateString() === today.toDateString();
+
+    const col = document.createElement('div');
+    col.className = 'wv-col';
+
+    const head = document.createElement('div');
+    head.className = 'wv-head';
+    head.innerHTML = `<div class="wv-day-name">${DAYS[i]}</div><div class="wv-day-num${isToday?' today-wv':''}">${d.getDate()}</div>`;
+    col.appendChild(head);
+
+    const body = document.createElement('div');
+    body.className = 'wv-body';
+    body.onclick = () => openPostModal(dateStr);
+
+    posts.forEach(p => {
+      const tc = getTypeColor(p.type);
+      const item = document.createElement('div');
+      item.className = 'wv-post';
+      item.style.cssText = `background:${tc}11;border-left-color:${tc}`;
+      item.innerHTML = `<div class="wv-post-title">${p.title||'Untitled'}</div><div class="wv-post-meta"><span>${p.type||''}</span><span>${getPageLabel(p.page)}</span>${p.time?`<span>${p.time}</span>`:''}</div>`;
+      item.onclick = e => { e.stopPropagation(); viewPost(p.id); };
+      body.appendChild(item);
+    });
+
+    const addBtn = document.createElement('button');
+    addBtn.className = 'wv-add';
+    addBtn.textContent = '+ Add';
+    addBtn.onclick = e => { e.stopPropagation(); openPostModal(dateStr); };
+    body.appendChild(addBtn);
+
+    col.appendChild(body);
+    grid.appendChild(col);
+  }
+  wrap.appendChild(grid);
+}
+
+// ── POST MODAL ───────────────────────────────────────
+function openPostModal(dateStr, postId) {
+  state.editingPost = postId || null;
+  state.tempLinks = [];
+  state.selectedType = null;
+  state.selectedPage = null;
+
+  document.getElementById('postModalTitle').textContent = postId ? 'Edit Post' : 'New Post';
+  document.getElementById('deleteBtn').style.display = postId ? 'block' : 'none';
+
+  if (postId) {
+    const cal = getActiveCal();
+    const post = cal.posts.find(p=>p.id===postId);
+    if (post) {
+      document.getElementById('f-title').value = post.title || '';
+      document.getElementById('f-date').value = post.date || dateStr;
+      document.getElementById('f-time').value = post.time || '09:00';
+      document.getElementById('f-caption').value = post.caption || '';
+      state.tempLinks = [...(post.links||[])];
+      state.selectedType = post.type;
+      state.selectedPage = post.page;
+      // stickers
+      renderStickers(post.page);
+      setTimeout(()=>{
+        (post.stickers||[]).forEach(s => {
+          document.querySelectorAll('.sticker-btn').forEach(btn => {
+            if (btn.dataset.sticker === s) btn.classList.add('selected');
+          });
+        });
+      },50);
+    }
+  } else {
+    document.getElementById('f-title').value = '';
+    document.getElementById('f-date').value = dateStr;
+    document.getElementById('f-time').value = '09:00';
+    document.getElementById('f-caption').value = '';
+    state.tempLinks = [];
+    renderStickers('tarot');
+  }
+
+  refreshTypeButtons();
+  refreshPageButtons();
+  renderLinkList();
+  document.getElementById('postModal').style.display = 'flex';
+  document.getElementById('f-title').focus();
+}
+
+function closePostModal(e) {
+  if (!e || e.target === document.getElementById('postModal')) document.getElementById('postModal').style.display = 'none';
+}
+
+function selectType(t) {
+  state.selectedType = t;
+  refreshTypeButtons();
+}
+function refreshTypeButtons() {
+  ['reel','feed','story','carousel'].forEach(t => {
+    const btn = document.getElementById('tb-'+t);
+    btn.className = 'type-btn' + (state.selectedType===t ? ` selected-${t}` : '');
+  });
+}
+
+function selectPage(p) {
+  state.selectedPage = p;
+  refreshPageButtons();
+  renderStickers(p);
+}
+function refreshPageButtons() {
+  ['tarot','smm','photo'].forEach(p => {
+    const btn = document.getElementById('pb-'+p);
+    btn.className = 'page-btn' + (state.selectedPage===p ? ` selected-${p}` : '');
+  });
+}
+
+function renderStickers(page) {
+  const pack = document.getElementById('stickerPack');
+  pack.innerHTML = '';
+  const labels = {tarot:'Tarot Pack',smm:'SMM Pack',photo:'Photo Pack'};
+  const pages = page ? [page] : ['tarot','smm','photo'];
+  pages.forEach(pg => {
+    const lbl = document.createElement('div');
+    lbl.className = 'sticker-label';
+    lbl.textContent = labels[pg];
+    lbl.style.cssText = 'width:100%;font-size:6px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-top:4px';
+    pack.appendChild(lbl);
+    STICKERS[pg].forEach(s => {
+      const btn = document.createElement('button');
+      btn.className = 'sticker-btn';
+      btn.dataset.sticker = s;
+      btn.textContent = s;
+      btn.title = pg;
+      btn.onclick = () => btn.classList.toggle('selected');
+      pack.appendChild(btn);
+    });
+  });
+  // show all packs
+  if (!page) return;
+  // also add other packs collapsed
+  const others = ['tarot','smm','photo'].filter(x=>x!==page);
+  others.forEach(pg => {
+    const lbl = document.createElement('div');
+    lbl.style.cssText = 'width:100%;font-size:6px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-top:6px';
+    lbl.textContent = labels[pg];
+    pack.appendChild(lbl);
+    STICKERS[pg].forEach(s => {
+      const btn = document.createElement('button');
+      btn.className = 'sticker-btn';
+      btn.dataset.sticker = s;
+      btn.textContent = s;
+      btn.onclick = () => btn.classList.toggle('selected');
+      pack.appendChild(btn);
+    });
+  });
+}
+
+function addLink() {
+  const input = document.getElementById('f-link-input');
+  const val = input.value.trim();
+  if (!val) return;
+  state.tempLinks.push(val);
+  input.value = '';
+  renderLinkList();
+}
+function removeLink(i) {
+  state.tempLinks.splice(i, 1);
+  renderLinkList();
+}
+function renderLinkList() {
+  const list = document.getElementById('f-links');
+  list.innerHTML = '';
+  state.tempLinks.forEach((link, i) => {
+    const item = document.createElement('div');
+    item.className = 'link-item';
+    item.innerHTML = `<a href="${link}" target="_blank">${link}</a><span class="link-remove" onclick="removeLink(${i})">✕</span>`;
+    list.appendChild(item);
+  });
+}
+
+function savePost() {
+  const cal = getActiveCal();
+  if (!cal) return;
+  const title = document.getElementById('f-title').value.trim();
+  const date = document.getElementById('f-date').value;
+  const time = document.getElementById('f-time').value;
+  const caption = document.getElementById('f-caption').value;
+  const stickers = [...document.querySelectorAll('.sticker-btn.selected')].map(b=>b.dataset.sticker);
+
+  if (!title || !date) { alert('Please add a title and date.'); return; }
+
+  if (state.editingPost) {
+    const p = cal.posts.find(x=>x.id===state.editingPost);
+    if (p) Object.assign(p, { title, date, time, caption, type:state.selectedType, page:state.selectedPage, stickers, links:[...state.tempLinks] });
+  } else {
+    cal.posts.push({ id:uid(), title, date, time, caption, type:state.selectedType, page:state.selectedPage, stickers, links:[...state.tempLinks] });
+  }
+  save(); renderCalendar();
+  document.getElementById('postModal').style.display = 'none';
+}
+
+function deletePost() {
+  if (!state.editingPost) return;
+  if (!confirm('Delete this post?')) return;
+  const cal = getActiveCal();
+  cal.posts = cal.posts.filter(p=>p.id!==state.editingPost);
+  save(); renderCalendar();
+  document.getElementById('postModal').style.display = 'none';
+}
+
+// ── VIEW POST (detail) ────────────────────────────────
+function viewPost(id) {
+  openPostModal(null, id);
+}
+
+// ── INIT ──────────────────────────────────────────────
+document.getElementById('f-link-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); addLink(); }
+});
+
+load();
+if (!state.activeCal && state.calendars.length) state.activeCal = state.calendars[0].id;
+document.getElementById('yearInput').value = state.currentYear;
+renderSidebar();
+renderCalendar();
+renderStickers('tarot');
+</script>
+</body>
+</html>
